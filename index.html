@@ -589,7 +589,153 @@ select.status-select {
 
 /* ── DIVIDER ── */
 .divider { height:1px; background:var(--border); margin:20px 0; }
-</style>
+/* ── MOBILE BOTTOM NAV ── */
+.mobile-nav {
+  display:none;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  z-index:300;
+  padding:6px 0 env(safe-area-inset-bottom,6px);
+  overflow-x:auto;
+}
+.mobile-nav-inner {
+  display:flex;
+  gap:0;
+  min-width:max-content;
+  padding:0 8px;
+}
+.mobile-nav-btn {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  padding:6px 12px;
+  border-radius:8px;
+  border:none;
+  background:transparent;
+  color:var(--text3);
+  cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.3px;
+  white-space:nowrap;
+  transition:all .15s;
+  min-width:56px;
+}
+.mobile-nav-btn .mn-icon { font-size:18px; line-height:1; }
+.mobile-nav-btn.active { color:var(--gold); }
+.mobile-nav-btn.active .mn-icon { transform:scale(1.15); }
+
+@media (max-width:768px) {
+  /* Hide desktop sidebar */
+  .sidebar { display:none; }
+
+  /* Show mobile nav */
+  .mobile-nav { display:block; }
+
+  /* Main takes full width, add bottom padding for nav */
+  .main {
+    margin-left:0;
+    padding:16px 14px 90px;
+  }
+
+  /* Grids collapse to 1 or 2 col */
+  .grid2 { grid-template-columns:1fr; }
+  .grid3 { grid-template-columns:1fr; }
+  .grid4 { grid-template-columns:1fr 1fr; gap:10px; }
+
+  /* Page titles smaller */
+  .page-title { font-size:22px; }
+  .page-sub { font-size:12px; margin-bottom:18px; }
+
+  /* Metrics compact */
+  .metric { padding:14px 16px; }
+  .metric .val { font-size:18px; }
+
+  /* Cards compact */
+  .card { padding:14px 16px; }
+
+  /* Today hero stack */
+  .today-hero {
+    flex-direction:column;
+    align-items:flex-start;
+    gap:12px;
+    padding:16px;
+  }
+  .today-hero .greeting { font-size:18px; }
+
+  /* Ritual grid 4 cols on mobile */
+  .ritual-grid {
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+  }
+  .ritual-item { padding:10px 8px; }
+  .ritual-item .r-icon { font-size:16px; margin-bottom:4px; }
+  .ritual-item .r-name { font-size:10px; }
+
+  /* Tasks */
+  .task-item { padding:8px 10px; flex-wrap:wrap; gap:6px; }
+  .task-text { font-size:13px; }
+
+  /* Pipe table horizontal scroll */
+  .pipe-table { font-size:12px; }
+  .card:has(.pipe-table) { padding:0; overflow-x:auto; }
+
+  /* Trello board scroll */
+  #trello-lists { flex-direction:column; }
+  #trello-lists > div { min-width:unset; max-width:unset; width:100%; }
+
+  /* Trello stats 2x2 */
+  #trello-stats { grid-template-columns:1fr 1fr !important; }
+
+  /* Evolução buttons wrap */
+  #ev-semana > div:first-child,
+  #ev-input > div:first-child { flex-wrap:wrap; }
+
+  /* Treino day tabs wrap */
+  #panel-treino > div:nth-child(3) { flex-wrap:wrap; gap:4px; }
+  #panel-treino > div:nth-child(3) .btn { flex:1; min-width:80px; font-size:11px; padding:6px 8px; }
+
+  /* Macro grid 2 col */
+  #panel-macro .grid4 { grid-template-columns:1fr 1fr; }
+
+  /* CVM team grid */
+  #panel-cvm .grid4 { grid-template-columns:1fr 1fr; }
+
+  /* Section head wrap */
+  .section-head { flex-wrap:wrap; gap:6px; }
+
+  /* Reflection grid single col */
+  .close-day .grid2 { grid-template-columns:1fr; }
+
+  /* Editable val full width on mobile */
+  .editable-val { width:100% !important; }
+
+  /* Habit tracker scroll */
+  #habit-tracker { overflow-x:auto; }
+
+  /* Tennis grid single col */
+  .tennis-grid { grid-template-columns:1fr !important; }
+
+  /* MFO pipe table scroll wrapper */
+  #panel-mfo .card { overflow-x:auto; }
+
+  /* Input month row wrap */
+  #ev-input .card:last-child > div { flex-wrap:wrap; }
+
+  /* Stars bigger touch targets */
+  .star-btn { font-size:28px; }
+  .energy-btn { width:42px; height:42px; font-size:20px; }
+}
+
+@media (max-width:400px) {
+  .grid4 { grid-template-columns:1fr; }
+  .ritual-grid { grid-template-columns:repeat(4,1fr); gap:6px; }
+  .main { padding:12px 10px 90px; }
+}</style>
 </head>
 <body>
 
@@ -655,6 +801,39 @@ select.status-select {
     </div>
   </div>
 </aside>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mobile-nav-btn active" id="mn-hoje" onclick="goTo('hoje');setMobileNav('hoje')">
+      <span class="mn-icon">☀️</span>Hoje
+    </button>
+    <button class="mobile-nav-btn" id="mn-mfo" onclick="goTo('mfo');setMobileNav('mfo')">
+      <span class="mn-icon">💼</span>MFO
+    </button>
+    <button class="mobile-nav-btn" id="mn-cvm" onclick="goTo('cvm');setMobileNav('cvm')">
+      <span class="mn-icon">📊</span>CVM
+    </button>
+    <button class="mobile-nav-btn" id="mn-pessoal" onclick="goTo('pessoal');setMobileNav('pessoal')">
+      <span class="mn-icon">🎯</span>Metas
+    </button>
+    <button class="mobile-nav-btn" id="mn-saude" onclick="goTo('saude');setMobileNav('saude')">
+      <span class="mn-icon">💪</span>Saúde
+    </button>
+    <button class="mobile-nav-btn" id="mn-treino" onclick="goTo('treino');setMobileNav('treino')">
+      <span class="mn-icon">🏋️</span>Treino
+    </button>
+    <button class="mobile-nav-btn" id="mn-macro" onclick="goTo('macro');setMobileNav('macro')">
+      <span class="mn-icon">📈</span>Macro
+    </button>
+    <button class="mobile-nav-btn" id="mn-evolucao" onclick="goTo('evolucao');setMobileNav('evolucao')">
+      <span class="mn-icon">🔁</span>Evolução
+    </button>
+    <button class="mobile-nav-btn" id="mn-trello" onclick="goTo('trello');loadTrello();setMobileNav('trello')">
+      <span class="mn-icon">📋</span>Trello
+    </button>
+  </div>
+</nav>
 
 <!-- MAIN -->
 <main class="main">
@@ -1955,7 +2134,16 @@ function goTo(id) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
-  event.currentTarget.classList.add('active');
+  if(event && event.currentTarget && event.currentTarget.classList.contains('nav-item')) {
+    event.currentTarget.classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+
+function setMobileNav(id) {
+  document.querySelectorAll('.mobile-nav-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('mn-'+id);
+  if(btn) btn.classList.add('active');
 }
 
 // ─── LOCALSTORAGE ───
