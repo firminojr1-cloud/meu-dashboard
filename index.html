@@ -1994,9 +1994,9 @@ select.status-select {
   </div>
 
   <!-- ESTADO -->
-  <div id="trello-loading" style="text-align:center;padding:60px;color:var(--text3);font-size:14px">
+  <div id="trello-loading" style="text-align:center;padding:40px 20px;color:var(--text);font-size:14px;background:var(--surface);border:1px solid var(--border);border-radius:12px">
     <div style="font-size:32px;margin-bottom:12px">📋</div>
-    Clique em "Atualizar" para carregar o board
+    <div style="color:var(--text2)">Clique em <strong style="color:var(--gold)">↻ Atualizar</strong> para carregar o board</div>
   </div>
   <div id="trello-error" style="display:none;background:rgba(245,101,101,.08);border:1px solid rgba(245,101,101,.2);border-radius:10px;padding:20px;color:var(--red);font-size:13px"></div>
 
@@ -3076,21 +3076,22 @@ async function loadTrello() {
   // Se não tem credenciais, mostrar formulário de configuração
   if(!TRELLO_KEY || !TRELLO_TOKEN) {
     loadEl.style.display = 'block';
+    loadEl.style.textAlign = 'left';
     loadEl.innerHTML = `
-      <div style="max-width:420px;margin:0 auto;text-align:left">
+      <div style="max-width:420px;margin:0 auto">
         <div style="font-size:28px;margin-bottom:12px;text-align:center">🔑</div>
-        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;text-align:center">Configure o Trello</div>
-        <div style="font-size:13px;color:var(--text2);margin-bottom:20px;text-align:center">As credenciais ficam salvas só no seu navegador</div>
-        <div style="margin-bottom:12px">
-          <label style="font-size:11px;color:var(--text3);font-weight:700;letter-spacing:1px;display:block;margin-bottom:6px">API KEY</label>
-          <input id="cfg-trello-key" type="text" placeholder="Cole sua API Key aqui" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;font-size:13px;font-family:'Outfit',sans-serif;outline:none">
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;text-align:center">Configure o Trello</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:24px;text-align:center">As credenciais ficam salvas só no seu navegador</div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:11px;color:var(--text3);font-weight:700;letter-spacing:1px;margin-bottom:6px">API KEY</div>
+          <input id="cfg-trello-key" type="text" placeholder="Cole sua API Key aqui" style="width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:10px 14px;font-size:13px;font-family:'Outfit',sans-serif;outline:none;box-sizing:border-box">
         </div>
-        <div style="margin-bottom:20px">
-          <label style="font-size:11px;color:var(--text3);font-weight:700;letter-spacing:1px;display:block;margin-bottom:6px">TOKEN</label>
-          <input id="cfg-trello-token" type="password" placeholder="Cole seu Token aqui" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;font-size:13px;font-family:'Outfit',sans-serif;outline:none">
+        <div style="margin-bottom:24px">
+          <div style="font-size:11px;color:var(--text3);font-weight:700;letter-spacing:1px;margin-bottom:6px">TOKEN</div>
+          <input id="cfg-trello-token" type="password" placeholder="Cole seu Token aqui" style="width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:10px 14px;font-size:13px;font-family:'Outfit',sans-serif;outline:none;box-sizing:border-box">
         </div>
-        <button onclick="saveTrelloCreds()" class="btn btn-gold" style="width:100%">Salvar e Conectar</button>
-        <div style="font-size:11px;color:var(--text3);margin-top:12px;text-align:center">As credenciais ficam armazenadas apenas no localStorage do seu navegador — nunca são enviadas a nenhum servidor externo além do Trello.</div>
+        <button onclick="saveTrelloCreds()" style="width:100%;padding:12px;border-radius:8px;border:none;background:var(--gold);color:#0a0c14;font-size:14px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer">Salvar e Conectar</button>
+        <div style="font-size:11px;color:var(--text3);margin-top:14px;text-align:center;line-height:1.6">As credenciais ficam armazenadas apenas no localStorage do seu navegador.</div>
       </div>`;
     return;
   }
