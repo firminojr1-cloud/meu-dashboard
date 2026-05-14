@@ -1,0 +1,3120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Vida & Negócio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg:#080b12;
+  --surface:#0e1220;
+  --surface2:#141828;
+  --surface3:#1a1f30;
+  --border:#1e2438;
+  --border2:#252c42;
+  --accent:#c8a96e;
+  --accent2:#e8c98e;
+  --green:#3ecf8e;
+  --red:#f56565;
+  --blue:#60a5fa;
+  --purple:#a78bfa;
+  --orange:#fb923c;
+  --teal:#2dd4bf;
+  --text:#f0f2f8;
+  --text2:#8892b0;
+  --text3:#4a5270;
+  --gold:#c8a96e;
+  --gold2:#e8c98e;
+  --radius:12px;
+}
+
+body {
+  font-family:'Outfit',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position:fixed;
+  left:0;top:0;bottom:0;
+  width:220px;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  z-index:200;
+}
+.sidebar-logo {
+  padding:28px 24px 20px;
+  border-bottom:1px solid var(--border);
+}
+.sidebar-logo .name {
+  font-family:'DM Serif Display',serif;
+  font-size:18px;
+  color:var(--gold2);
+  line-height:1.2;
+}
+.sidebar-logo .tagline {
+  font-size:11px;
+  color:var(--text3);
+  margin-top:4px;
+  letter-spacing:.5px;
+}
+.sidebar-date {
+  padding:12px 24px;
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  color:var(--text3);
+  border-bottom:1px solid var(--border);
+}
+
+.nav-group { padding:16px 12px 0; }
+.nav-label {
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--text3);
+  padding:0 12px;
+  margin-bottom:8px;
+}
+.nav-item {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text2);
+  transition:all .15s;
+  margin-bottom:2px;
+  border:1px solid transparent;
+}
+.nav-item:hover { background:var(--surface2); color:var(--text); }
+.nav-item.active {
+  background:rgba(200,169,110,.1);
+  color:var(--gold2);
+  border-color:rgba(200,169,110,.2);
+}
+.nav-item .icon { font-size:14px; width:18px; text-align:center; }
+
+.sidebar-footer {
+  margin-top:auto;
+  padding:16px;
+  border-top:1px solid var(--border);
+}
+.progress-mini { margin-bottom:10px; }
+.progress-mini .lbl { font-size:11px; color:var(--text3); display:flex; justify-content:space-between; margin-bottom:4px; }
+.progress-mini .lbl span { color:var(--gold); }
+.bar-track { height:4px; background:var(--surface3); border-radius:2px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--gold),var(--gold2)); transition:width .5s; }
+
+/* ── MAIN ── */
+.main {
+  margin-left:220px;
+  min-height:100vh;
+  padding:32px 36px 60px;
+}
+
+/* ── PANELS ── */
+.panel { display:none; animation:fadeIn .3s ease; }
+.panel.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── TYPOGRAPHY ── */
+.page-title {
+  font-family:'DM Serif Display',serif;
+  font-size:28px;
+  color:var(--text);
+  margin-bottom:4px;
+}
+.page-title span { color:var(--gold); font-style:italic; }
+.page-sub { font-size:14px; color:var(--text3); margin-bottom:28px; }
+
+/* ── GRID HELPERS ── */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+
+/* ── CARDS ── */
+.card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px 22px;
+}
+.card-title {
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:14px;
+}
+
+/* ── METRIC CARDS ── */
+.metric {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 20px;
+  position:relative;
+  overflow:hidden;
+}
+.metric::before {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:var(--accent-color,var(--gold));
+}
+.metric .lbl { font-size:11px; color:var(--text3); font-weight:500; letter-spacing:.5px; margin-bottom:6px; }
+.metric .val { font-family:'DM Mono',monospace; font-size:22px; font-weight:500; color:var(--text); line-height:1; }
+.metric .val .unit { font-size:13px; color:var(--text2); margin-left:2px; }
+.metric .sub { font-size:11px; color:var(--text3); margin-top:6px; }
+.metric .badge-metric {
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-size:11px;
+  font-weight:600;
+  padding:2px 8px;
+  border-radius:4px;
+  margin-top:6px;
+}
+.badge-up { background:rgba(62,207,142,.12); color:var(--green); }
+.badge-down { background:rgba(245,101,101,.12); color:var(--red); }
+.badge-warn { background:rgba(251,146,60,.12); color:var(--orange); }
+
+/* ── PROGRESS BAR LARGE ── */
+.progress-block { margin-top:8px; }
+.progress-label { display:flex; justify-content:space-between; font-size:12px; color:var(--text2); margin-bottom:6px; }
+.progress-label .pct { font-family:'DM Mono',monospace; font-weight:500; color:var(--gold); }
+.progress-track {
+  height:8px;
+  background:var(--surface3);
+  border-radius:4px;
+  overflow:hidden;
+}
+.progress-fill {
+  height:100%;
+  border-radius:4px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2));
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.progress-fill.green { background:linear-gradient(90deg,#2dd4bf,var(--green)); }
+.progress-fill.blue  { background:linear-gradient(90deg,#3b82f6,var(--blue)); }
+.progress-fill.purple{ background:linear-gradient(90deg,#8b5cf6,var(--purple)); }
+
+/* ── SECTION DIVIDER ── */
+.section-gap { margin-top:28px; }
+.section-head {
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+  margin-bottom:16px;
+}
+.section-head h3 {
+  font-family:'DM Serif Display',serif;
+  font-size:18px;
+  color:var(--text);
+}
+.section-head span {
+  font-size:12px;
+  color:var(--text3);
+}
+
+/* ── PIPE TABLE ── */
+.pipe-table { width:100%; border-collapse:collapse; }
+.pipe-table th {
+  text-align:left;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text3);
+  padding:8px 12px;
+  border-bottom:1px solid var(--border);
+}
+.pipe-table td {
+  padding:10px 12px;
+  font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,.03);
+  vertical-align:middle;
+}
+.pipe-table tr:hover td { background:rgba(255,255,255,.02); }
+.pipe-table tr:last-child td { border-bottom:none; }
+.client-name { font-weight:600; color:var(--text); }
+.client-vol { font-family:'DM Mono',monospace; font-size:13px; color:var(--gold); }
+.status-pill {
+  display:inline-block;
+  padding:2px 10px;
+  border-radius:12px;
+  font-size:11px;
+  font-weight:600;
+}
+.s-quente  { background:rgba(62,207,142,.12); color:var(--green); }
+.s-morno   { background:rgba(251,146,60,.12);  color:var(--orange); }
+.s-frio    { background:rgba(96,165,250,.12);   color:var(--blue); }
+.s-ativo   { background:rgba(200,169,110,.15);  color:var(--gold); }
+
+select.status-select {
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  color:var(--text2);
+  border-radius:6px;
+  padding:3px 8px;
+  font-size:11px;
+  font-family:'Outfit',sans-serif;
+  cursor:pointer;
+  outline:none;
+}
+
+/* ── TODAY PANEL ── */
+.today-hero {
+  background:linear-gradient(135deg,var(--surface) 0%,var(--surface2) 100%);
+  border:1px solid var(--border);
+  border-left:3px solid var(--gold);
+  border-radius:var(--radius);
+  padding:24px 28px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.today-hero .greeting {
+  font-family:'DM Serif Display',serif;
+  font-size:22px;
+  color:var(--text);
+}
+.today-hero .greeting span { color:var(--gold); font-style:italic; }
+.today-hero .day-meta { font-size:13px; color:var(--text2); margin-top:4px; }
+.energy-selector { display:flex; gap:8px; align-items:center; }
+.energy-btn {
+  width:36px;height:36px;
+  border-radius:50%;
+  border:2px solid var(--border2);
+  background:var(--surface2);
+  cursor:pointer;
+  font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+  color:transparent;
+  text-shadow:0 0 0 var(--text);
+}
+.energy-btn:hover { border-color:var(--gold); transform:scale(1.1); }
+.energy-btn.selected { border-color:var(--gold); background:rgba(200,169,110,.15); transform:scale(1.1); }
+
+/* ── RITUAL ── */
+.ritual-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:20px;
+}
+.ritual-item {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px 16px;
+  cursor:pointer;
+  transition:all .2s;
+  user-select:none;
+  position:relative;
+  overflow:hidden;
+}
+.ritual-item::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:10px;
+  background:rgba(62,207,142,.06);
+  opacity:0;
+  transition:opacity .2s;
+}
+.ritual-item.done::after { opacity:1; }
+.ritual-item.done { border-color:rgba(62,207,142,.3); }
+.ritual-item .r-icon { font-size:20px; margin-bottom:6px; }
+.ritual-item .r-name { font-size:12px; font-weight:600; color:var(--text2); }
+.ritual-item .r-check {
+  position:absolute;
+  top:8px;right:8px;
+  width:16px;height:16px;
+  border-radius:50%;
+  border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;
+  color:transparent;
+  transition:all .2s;
+}
+.ritual-item.done .r-check {
+  background:var(--green);
+  border-color:var(--green);
+  color:#fff;
+}
+
+/* ── TASKS ── */
+.task-area { display:flex; flex-direction:column; gap:6px; }
+.task-item {
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:10px 14px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  transition:all .2s;
+}
+.task-item.done-task { opacity:.5; }
+.task-item.done-task .task-text { text-decoration:line-through; color:var(--text3); }
+.task-cb {
+  width:18px;height:18px;
+  border-radius:4px;
+  border:2px solid var(--border2);
+  background:transparent;
+  cursor:pointer;
+  flex-shrink:0;
+  margin-top:1px;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:transparent;
+}
+.task-cb.checked { background:var(--green); border-color:var(--green); color:#fff; }
+.task-text { font-size:13px; color:var(--text); flex:1; line-height:1.4; }
+.task-tag {
+  font-size:10px;
+  padding:2px 8px;
+  border-radius:4px;
+  font-weight:600;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.tag-mfo    { background:rgba(200,169,110,.12); color:var(--gold); }
+.tag-cvm    { background:rgba(96,165,250,.12);  color:var(--blue); }
+.tag-pessoal{ background:rgba(167,139,250,.12); color:var(--purple); }
+.tag-familia{ background:rgba(62,207,142,.12);  color:var(--green); }
+.tag-ubatuba{ background:rgba(45,212,191,.12);  color:var(--teal); }
+
+.add-task-row {
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.add-task-input {
+  flex:1;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:8px;
+  padding:8px 14px;
+  font-size:13px;
+  font-family:'Outfit',sans-serif;
+  outline:none;
+  transition:border-color .15s;
+}
+.add-task-input:focus { border-color:var(--gold); }
+.add-task-input::placeholder { color:var(--text3); }
+.tag-select {
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--text2);
+  border-radius:8px;
+  padding:8px 10px;
+  font-size:12px;
+  font-family:'Outfit',sans-serif;
+  outline:none;
+  cursor:pointer;
+}
+.btn {
+  padding:8px 18px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  font-size:13px;
+  font-family:'Outfit',sans-serif;
+  font-weight:600;
+  transition:all .15s;
+}
+.btn-gold { background:var(--gold); color:#0a0c14; }
+.btn-gold:hover { background:var(--gold2); }
+.btn-outline {
+  background:transparent;
+  border:1px solid var(--border2);
+  color:var(--text2);
+}
+.btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+
+/* ── FECHAMENTO ── */
+.close-day {
+  background:linear-gradient(135deg,rgba(200,169,110,.08),rgba(200,169,110,.03));
+  border:1px solid rgba(200,169,110,.2);
+  border-radius:var(--radius);
+  padding:24px;
+}
+.close-day h3 {
+  font-family:'DM Serif Display',serif;
+  font-size:17px;
+  color:var(--gold2);
+  margin-bottom:16px;
+}
+.reflect-item { margin-bottom:14px; }
+.reflect-item label {
+  display:block;
+  font-size:12px;
+  color:var(--text3);
+  font-weight:600;
+  letter-spacing:.5px;
+  margin-bottom:6px;
+}
+.reflect-input {
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:8px;
+  padding:10px 14px;
+  font-size:13px;
+  font-family:'Outfit',sans-serif;
+  outline:none;
+  resize:none;
+  min-height:60px;
+  transition:border-color .15s;
+}
+.reflect-input:focus { border-color:rgba(200,169,110,.4); }
+.reflect-input::placeholder { color:var(--text3); }
+
+.stars-row { display:flex; gap:6px; }
+.star-btn {
+  font-size:22px;
+  cursor:pointer;
+  transition:transform .15s;
+  opacity:.3;
+  background:none;
+  border:none;
+}
+.star-btn:hover { transform:scale(1.2); opacity:1; }
+.star-btn.lit { opacity:1; }
+
+/* ── METAS PESSOAIS ── */
+.meta-ring-row {
+  display:flex;
+  gap:20px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.ring-container { position:relative; width:90px; height:90px; flex-shrink:0; }
+.ring-container svg { transform:rotate(-90deg); }
+.ring-label {
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.ring-val { font-family:'DM Mono',monospace; font-size:14px; font-weight:500; color:var(--text); }
+.ring-name { font-size:9px; color:var(--text3); margin-top:1px; letter-spacing:.5px; }
+
+/* ── RENDA ── */
+.renda-table { width:100%; border-collapse:collapse; }
+.renda-table th {
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text3);
+  padding:6px 12px;
+  text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.renda-table td {
+  padding:10px 12px;
+  font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,.03);
+}
+.renda-table tr:last-child td { border:none; font-weight:700; }
+.mono { font-family:'DM Mono',monospace; }
+.clr-gold { color:var(--gold); }
+.clr-green { color:var(--green); }
+.clr-text2 { color:var(--text2); }
+
+/* ── INPUT EDITABLE ── */
+.editable-val {
+  font-family:'DM Mono',monospace;
+  font-size:14px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  color:var(--text);
+  border-radius:6px;
+  padding:4px 10px;
+  width:110px;
+  outline:none;
+  transition:border-color .15s;
+}
+.editable-val:focus { border-color:var(--gold); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+/* ── SAVE TOAST ── */
+#toast {
+  position:fixed;
+  bottom:24px;right:24px;
+  background:var(--green);
+  color:#0a0c14;
+  font-size:12px;
+  font-weight:700;
+  padding:8px 18px;
+  border-radius:8px;
+  opacity:0;
+  transform:translateY(10px);
+  transition:all .3s;
+  z-index:999;
+  pointer-events:none;
+}
+#toast.show { opacity:1; transform:translateY(0); }
+
+/* ── DIVIDER ── */
+.divider { height:1px; background:var(--border); margin:20px 0; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="name">Seu Dashboard</div>
+    <div class="tagline">Vida · Negócio · Propósito</div>
+  </div>
+  <div class="sidebar-date" id="sidebar-date">Carregando...</div>
+
+  <div class="nav-group">
+    <div class="nav-label">Diário</div>
+    <div class="nav-item active" onclick="goTo('hoje')">
+      <span class="icon">☀️</span> Hoje
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Negócio</div>
+    <div class="nav-item" onclick="goTo('mfo')">
+      <span class="icon">💼</span> MFO / Wealth
+    </div>
+    <div class="nav-item" onclick="goTo('cvm')">
+      <span class="icon">📊</span> Consultoria CVM
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Pessoal</div>
+    <div class="nav-item" onclick="goTo('pessoal')">
+      <span class="icon">🎯</span> Metas & Renda
+    </div>
+    <div class="nav-item" onclick="goTo('saude')">
+      <span class="icon">💪</span> Saúde & Hábitos
+    </div>
+    <div class="nav-item" onclick="goTo('treino')">
+      <span class="icon">🏋️</span> Rotina de Treino
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Mercado</div>
+    <div class="nav-item" onclick="goTo('macro')">
+      <span class="icon">📈</span> Dados Macro
+    </div>
+    <div class="nav-item" onclick="goTo('evolucao')">
+      <span class="icon">🔁</span> Evolução Anual
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Time</div>
+    <div class="nav-item" onclick="goTo('trello');loadTrello()">
+      <span class="icon">📋</span> Trello do Time
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="progress-mini">
+      <div class="lbl">Meta Anual Renda <span id="sb-pct-renda">0%</span></div>
+      <div class="bar-track"><div class="bar-fill" id="sb-bar-renda" style="width:0%"></div></div>
+    </div>
+    <div class="progress-mini">
+      <div class="lbl">AuC MFO <span id="sb-pct-mfo">0%</span></div>
+      <div class="bar-track"><div class="bar-fill" id="sb-bar-mfo" style="width:0%"></div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ═══ HOJE ═══ -->
+<div class="panel active" id="panel-hoje">
+
+  <div class="today-hero">
+    <div>
+      <div class="greeting">Bom dia, <span id="greeting-name">Campeão</span> 👋</div>
+      <div class="day-meta" id="today-meta">Carregando data...</div>
+    </div>
+    <div>
+      <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:6px;letter-spacing:1px">ENERGIA HOJE</div>
+      <div class="energy-selector" id="energy-btns">
+        <button class="energy-btn" onclick="setEnergy(1)" title="Baixa">😴</button>
+        <button class="energy-btn" onclick="setEnergy(2)" title="Média">😐</button>
+        <button class="energy-btn" onclick="setEnergy(3)" title="Boa">😊</button>
+        <button class="energy-btn" onclick="setEnergy(4)" title="Alta">🔥</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RITUAL MANHÃ -->
+  <div class="card-title" style="padding:0 2px;margin-bottom:10px">RITUAL DA MANHÃ</div>
+  <div class="ritual-grid" id="ritual-grid">
+    <div class="ritual-item" onclick="toggleRitual(0)">
+      <div class="r-check">✓</div>
+      <div class="r-icon">🙏</div>
+      <div class="r-name">Oração</div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(1)">
+      <div class="r-check">✓</div>
+      <div class="r-icon">🧘</div>
+      <div class="r-name">Meditação</div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(2)">
+      <div class="r-check">✓</div>
+      <div class="r-icon">🤸</div>
+      <div class="r-name">Alongamento</div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(3)">
+      <div class="r-check">✓</div>
+      <div class="r-icon">💪</div>
+      <div class="r-name">Treino</div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(4)">
+      <div class="r-check">✓</div>
+      <div class="r-icon">☕</div>
+      <div class="r-name">Café</div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(5)">
+      <div class="r-check">✓</div>
+      <div class="r-icon">🇬🇧</div>
+      <div class="r-name">Inglês</div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(6)">
+      <div class="r-check">✓</div>
+      <div class="r-icon">📋</div>
+      <div class="r-name">Planejar dia</div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(7)">
+      <div class="r-check">✓</div>
+      <div class="r-icon">💧</div>
+      <div class="r-name">Hidratação</div>
+    </div>
+  </div>
+
+  <!-- TAREFAS DO DIA -->
+  <div class="section-gap">
+    <div class="section-head">
+      <h3>Tarefas do Dia</h3>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span id="tasks-count" style="font-size:12px;color:var(--text3)">0 concluídas</span>
+        <select class="tag-select" id="task-sort" onchange="renderTasks()" style="font-size:11px;padding:4px 8px">
+          <option value="prioridade">↑ Prioridade</option>
+          <option value="data">↑ Data</option>
+          <option value="criacao">↑ Criação</option>
+          <option value="area">↑ Área</option>
+        </select>
+      </div>
+    </div>
+    <div class="task-area" id="task-list"></div>
+    <div style="margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+      <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1px;margin-bottom:10px">+ NOVA TAREFA</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <input class="add-task-input" id="new-task-input" placeholder="Descreva a tarefa..." onkeydown="if(event.key==='Enter')addTask()" style="flex:1;min-width:200px">
+        <select class="tag-select" id="new-task-tag">
+          <option value="mfo">MFO</option>
+          <option value="cvm">CVM</option>
+          <option value="pessoal">Pessoal</option>
+          <option value="familia">Família</option>
+          <option value="ubatuba">Ubatuba</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <select class="tag-select" id="new-task-prioridade" style="font-size:12px">
+          <option value="alta">🔴 Alta</option>
+          <option value="media" selected>🟡 Média</option>
+          <option value="baixa">🟢 Baixa</option>
+        </select>
+        <input type="date" id="new-task-data" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 10px;font-size:12px;font-family:'Outfit',sans-serif;outline:none;cursor:pointer">
+        <button class="btn btn-gold" onclick="addTask()" style="margin-left:auto">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FECHAMENTO DO DIA -->
+  <div class="close-day">
+    <h3>✦ Fechamento do Dia</h3>
+    <div class="grid2">
+      <div>
+        <div class="reflect-item">
+          <label>Maior conquista de hoje</label>
+          <textarea class="reflect-input" id="r-conquista" placeholder="O que eu fiz bem hoje?" oninput="saveReflection()"></textarea>
+        </div>
+        <div class="reflect-item">
+          <label>O que ficou para amanhã</label>
+          <textarea class="reflect-input" id="r-amanha" placeholder="Prioridade de amanhã..." oninput="saveReflection()"></textarea>
+        </div>
+      </div>
+      <div>
+        <div class="reflect-item">
+          <label>Momento com Lohaine hoje</label>
+          <textarea class="reflect-input" id="r-lohaine" placeholder="Tivemos tempo de qualidade?" oninput="saveReflection()"></textarea>
+        </div>
+        <div class="reflect-item">
+          <label>Como foi minha energia espiritual</label>
+          <textarea class="reflect-input" id="r-espirito" placeholder="Orei? Meditei? Como me sinto?" oninput="saveReflection()"></textarea>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px">
+      <label style="font-size:12px;color:var(--text3);font-weight:600;letter-spacing:.5px;display:block;margin-bottom:8px">AVALIAÇÃO DO DIA</label>
+      <div class="stars-row" id="stars-row">
+        <button class="star-btn" onclick="setStar(1)">⭐</button>
+        <button class="star-btn" onclick="setStar(2)">⭐</button>
+        <button class="star-btn" onclick="setStar(3)">⭐</button>
+        <button class="star-btn" onclick="setStar(4)">⭐</button>
+        <button class="star-btn" onclick="setStar(5)">⭐</button>
+      </div>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div style="margin-top:20px;border-top:1px solid rgba(200,169,110,.15);padding-top:16px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px">📅 ÚLTIMOS 7 DIAS</div>
+      <div id="reflection-history"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ MFO ═══ -->
+<div class="panel" id="panel-mfo">
+  <div class="page-title">MFO / <span>Wealth</span></div>
+  <div class="page-sub">Multi-Family Office — Metas 2026 & 2027</div>
+
+  <!-- MÉTRICAS TOPO -->
+  <div class="grid4">
+    <div class="metric" style="--accent-color:var(--gold)">
+      <div class="lbl">RECEITA 2026 REALIZADO</div>
+      <div class="val">R$ <span id="mfo-rec-real">0</span><span class="unit">k</span></div>
+      <div class="progress-block">
+        <div class="progress-label"><span>Meta: R$ 1.500k</span><span class="pct" id="mfo-rec-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill" id="mfo-rec-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="metric" style="--accent-color:var(--blue)">
+      <div class="lbl">AuC REALIZADO (R$ MM)</div>
+      <div class="val">R$ <span id="mfo-auc-real">0</span><span class="unit">mm</span></div>
+      <div class="progress-block">
+        <div class="progress-label"><span>Meta 2026: R$ —</span><span class="pct" id="mfo-auc-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill blue" id="mfo-auc-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="metric" style="--accent-color:var(--green)">
+      <div class="lbl">CLIENTES ATIVOS</div>
+      <div class="val"><span id="mfo-cli-real">0</span><span class="unit">/20</span></div>
+      <div class="progress-block">
+        <div class="progress-label"><span>Meta: 20 clientes (Dez/27)</span><span class="pct" id="mfo-cli-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill green" id="mfo-cli-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="metric" style="--accent-color:var(--purple)">
+      <div class="lbl">MARGEM LÍQUIDA</div>
+      <div class="val"><span id="mfo-margem">0</span><span class="unit">%</span></div>
+      <div class="progress-block">
+        <div class="progress-label"><span>Meta: 25%</span><span class="pct" id="mfo-margem-pct">—</span></div>
+        <div class="progress-track"><div class="progress-fill purple" id="mfo-margem-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEITAS POR PRODUTO -->
+  <div class="section-gap">
+    <div class="section-head"><h3>Receitas por Produto</h3><span>Atualizar mensalmente</span></div>
+    <div class="grid3">
+      <div class="card">
+        <div class="card-title">PRODUTOS ESTRUTURADOS</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="font-size:12px;color:var(--text2)">Realizado R$</span>
+          <input class="editable-val" id="prod-est" type="number" value="0" oninput="updateMFOProducts()">
+          <span style="font-size:12px;color:var(--text2)">k</span>
+        </div>
+        <div class="progress-label"><span>Meta 2027: R$ 1.000k</span><span class="pct" id="prod-est-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill" id="prod-est-bar" style="width:0%"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">AuC (CUSTÓDIA)</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="font-size:12px;color:var(--text2)">Realizado R$</span>
+          <input class="editable-val" id="prod-auc" type="number" value="0" oninput="updateMFOProducts()">
+          <span style="font-size:12px;color:var(--text2)">k</span>
+        </div>
+        <div class="progress-label"><span>Meta 2027: R$ 1.500k</span><span class="pct" id="prod-auc-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill blue" id="prod-auc-bar" style="width:0%"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">CONSÓRCIOS, CRÉDITO & REBATES</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="font-size:12px;color:var(--text2)">Realizado R$</span>
+          <input class="editable-val" id="prod-cred" type="number" value="0" oninput="updateMFOProducts()">
+          <span style="font-size:12px;color:var(--text2)">k</span>
+        </div>
+        <div class="progress-label"><span>Meta 2027: R$ 500k</span><span class="pct" id="prod-cred-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill green" id="prod-cred-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPE DE CLIENTES -->
+  <div class="section-gap">
+    <div class="section-head"><h3>Pipeline de Clientes</h3><span>Ticket médio alvo: R$ 15mm</span></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="pipe-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Volume (R$)</th>
+            <th>Status</th>
+            <th>Próx. Reunião</th>
+            <th>Nota</th>
+          </tr>
+        </thead>
+        <tbody id="pipe-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- META 2027 -->
+  <div class="section-gap">
+    <div class="section-head"><h3>Visão 2027</h3></div>
+    <div class="grid3">
+      <div class="metric" style="--accent-color:var(--gold)">
+        <div class="lbl">RECEITA TOTAL META</div>
+        <div class="val">R$ 3.000<span class="unit">k</span></div>
+        <div class="sub">Estruturados + AuC + Crédito</div>
+      </div>
+      <div class="metric" style="--accent-color:var(--green)">
+        <div class="lbl">CLIENTES META</div>
+        <div class="val">20<span class="unit"> clientes</span></div>
+        <div class="sub">Ticket médio R$ 15mm</div>
+      </div>
+      <div class="metric" style="--accent-color:var(--blue)">
+        <div class="lbl">MARGEM LÍQUIDA META</div>
+        <div class="val">25<span class="unit">%</span></div>
+        <div class="sub">Lucro líquido sobre receita bruta</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CVM ═══ -->
+<div class="panel" id="panel-cvm">
+  <div class="page-title">Consultoria <span>CVM</span></div>
+  <div class="page-sub">Construção do zero ao 100 — do escritório</div>
+
+  <div class="grid4">
+    <div class="metric" style="--accent-color:var(--blue)">
+      <div class="lbl">AuC REALIZADO</div>
+      <div class="val">R$ <span id="cvm-auc-real">0</span><span class="unit">mm</span></div>
+      <div class="progress-block">
+        <div class="progress-label"><span>Meta 2026: R$ 60mm</span><span class="pct" id="cvm-auc-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill blue" id="cvm-auc-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="metric" style="--accent-color:var(--gold)">
+      <div class="lbl">RECEITA REALIZADA</div>
+      <div class="val">R$ <span id="cvm-rec-real">0</span><span class="unit">k</span></div>
+      <div class="progress-block">
+        <div class="progress-label"><span>Meta 2026: R$ 300k</span><span class="pct" id="cvm-rec-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill" id="cvm-rec-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="metric" style="--accent-color:var(--green)">
+      <div class="lbl">CLIENTES ATIVOS</div>
+      <div class="val"><span id="cvm-cli">0</span><span class="unit"> clientes</span></div>
+      <div class="sub">Fee médio: 0,75% sobre AuC</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--purple)">
+      <div class="lbl">MARGEM LÍQUIDA</div>
+      <div class="val"><span id="cvm-margem">0</span><span class="unit">%</span></div>
+      <div class="progress-block">
+        <div class="progress-label"><span>Meta: 25%</span><span class="pct"></span></div>
+        <div class="progress-track"><div class="progress-fill purple" id="cvm-margem-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUTS CVM -->
+  <div class="section-gap">
+    <div class="section-head"><h3>Atualizar Métricas</h3></div>
+    <div class="grid3">
+      <div class="card">
+        <div class="card-title">AuC ATUAL (R$ MM)</div>
+        <input class="editable-val" id="cvm-auc-input" type="number" value="0" style="width:100%;margin-top:8px" oninput="updateCVM()">
+      </div>
+      <div class="card">
+        <div class="card-title">RECEITA ATUAL (R$ MIL)</div>
+        <input class="editable-val" id="cvm-rec-input" type="number" value="0" style="width:100%;margin-top:8px" oninput="updateCVM()">
+      </div>
+      <div class="card">
+        <div class="card-title">CLIENTES ATIVOS</div>
+        <input class="editable-val" id="cvm-cli-input" type="number" value="0" style="width:100%;margin-top:8px" oninput="updateCVM()">
+      </div>
+      <div class="card">
+        <div class="card-title">MARGEM LÍQUIDA (%)</div>
+        <input class="editable-val" id="cvm-margem-input" type="number" value="0" style="width:100%;margin-top:8px" oninput="updateCVM()">
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTRUTURA DO TIME -->
+  <div class="section-gap">
+    <div class="section-head"><h3>Estrutura do Time</h3></div>
+    <div class="grid4">
+      <div class="card" style="text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">👤</div>
+        <div style="font-weight:700;font-size:14px">Head</div>
+        <div style="font-size:12px;color:var(--gold);margin-top:4px">Você</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">👥</div>
+        <div style="font-weight:700;font-size:14px">Consultores</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">2 posições</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">📋</div>
+        <div style="font-weight:700;font-size:14px">Middle</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">1 posição</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">💹</div>
+        <div style="font-weight:700;font-size:14px">Mesa Prop.</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">1 posição</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- META 2027 CVM -->
+  <div class="section-gap">
+    <div class="section-head"><h3>Visão 2027</h3></div>
+    <div class="grid3">
+      <div class="metric" style="--accent-color:var(--blue)">
+        <div class="lbl">AuC META 2027</div>
+        <div class="val">R$ 200<span class="unit">mm</span></div>
+        <div class="progress-block">
+          <div class="progress-label"><span>AuC Atual</span><span class="pct" id="cvm-2027-pct">0%</span></div>
+          <div class="progress-track"><div class="progress-fill blue" id="cvm-2027-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="metric" style="--accent-color:var(--gold)">
+        <div class="lbl">RECEITA META 2027</div>
+        <div class="val">R$ 1.000<span class="unit">k</span></div>
+        <div class="sub">+ R$ 250k rebates/crédito</div>
+      </div>
+      <div class="metric" style="--accent-color:var(--green)">
+        <div class="lbl">FEE MÉDIO</div>
+        <div class="val">0,75<span class="unit">%</span></div>
+        <div class="sub">Sobre AuC gerenciado</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PESSOAL ═══ -->
+<div class="panel" id="panel-pessoal">
+  <div class="page-title">Metas & <span>Renda</span></div>
+  <div class="page-sub">Suas metas pessoais — 2026 & 2027</div>
+
+  <!-- RENDA PESSOAL -->
+  <div class="section-head"><h3>Projeção de Renda</h3><span>15% receita bruta — imposto 18,5%</span></div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:24px">
+    <table class="renda-table">
+      <thead>
+        <tr>
+          <th>Fonte</th>
+          <th>Meta 2026</th>
+          <th>Realizado 2026</th>
+          <th>Meta 2027</th>
+          <th>% 2026</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MFO</td>
+          <td class="mono clr-gold">R$ 300k</td>
+          <td><input class="editable-val" id="r-mfo-real" type="number" value="0" style="width:90px" oninput="updateRenda()"> k</td>
+          <td class="mono clr-text2">R$ 450k</td>
+          <td class="mono clr-green" id="rp-mfo">0%</td>
+        </tr>
+        <tr>
+          <td>Consultoria CVM</td>
+          <td class="mono clr-gold">R$ 75k</td>
+          <td><input class="editable-val" id="r-cvm-real" type="number" value="0" style="width:90px" oninput="updateRenda()"> k</td>
+          <td class="mono clr-text2">R$ 225k</td>
+          <td class="mono clr-green" id="rp-cvm">0%</td>
+        </tr>
+        <tr>
+          <td>Bônus (10% LL)</td>
+          <td class="mono clr-gold">R$ 200k</td>
+          <td><input class="editable-val" id="r-bonus-real" type="number" value="0" style="width:90px" oninput="updateRenda()"> k</td>
+          <td class="mono clr-text2">R$ 300k</td>
+          <td class="mono clr-green" id="rp-bonus">0%</td>
+        </tr>
+        <tr>
+          <td>Consórcio</td>
+          <td class="mono clr-gold">R$ 100k</td>
+          <td><input class="editable-val" id="r-cons-real" type="number" value="0" style="width:90px" oninput="updateRenda()"> k</td>
+          <td class="mono clr-text2">R$ 150k</td>
+          <td class="mono clr-green" id="rp-cons">0%</td>
+        </tr>
+        <tr>
+          <td>Incorporação</td>
+          <td class="mono clr-gold">R$ 100k</td>
+          <td><input class="editable-val" id="r-incorp-real" type="number" value="0" style="width:90px" oninput="updateRenda()"> k</td>
+          <td class="mono clr-text2">R$ 100k</td>
+          <td class="mono clr-green" id="rp-incorp">0%</td>
+        </tr>
+        <tr>
+          <td>Canadá</td>
+          <td class="mono clr-text2">—</td>
+          <td><input class="editable-val" id="r-canada-real" type="number" value="0" style="width:90px" oninput="updateRenda()"> k</td>
+          <td class="mono clr-text2">R$ 100k</td>
+          <td class="mono clr-green" id="rp-canada">0%</td>
+        </tr>
+        <tr style="background:rgba(200,169,110,.05)">
+          <td style="font-weight:700">TOTAL BRUTO</td>
+          <td class="mono clr-gold" style="font-weight:700">R$ 775k</td>
+          <td class="mono clr-green" style="font-weight:700" id="r-total-real">R$ 0k</td>
+          <td class="mono clr-text2" style="font-weight:700">R$ 1.125k</td>
+          <td class="mono clr-gold" style="font-weight:700" id="rp-total">0%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- METAS DE VIDA -->
+  <div class="section-head"><h3>Metas de Vida 2026</h3></div>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title">🚗 TROCA DE CARRO</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:10px">Previsão: Outubro/2026</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--text3)">Status:</span>
+        <select class="status-select" id="carro-status" onchange="saveLS('carro-status',this.value)">
+          <option value="planejando">Planejando</option>
+          <option value="economizando">Economizando</option>
+          <option value="pesquisando">Pesquisando</option>
+          <option value="feito">✅ Feito</option>
+        </select>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">✈️ VIAGEM EUA</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:10px">Férias Dezembro/2026</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--text3)">Status:</span>
+        <select class="status-select" id="viagem-status" onchange="saveLS('viagem-status',this.value)">
+          <option value="planejando">Planejando</option>
+          <option value="reservas">Fazendo reservas</option>
+          <option value="confirmado">Confirmado</option>
+          <option value="feito">✅ Realizado</option>
+        </select>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🇨🇦 PROJETO CANADÁ</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:10px">Iniciar em 2027</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--text3)">Status:</span>
+        <select class="status-select" id="canada-status" onchange="saveLS('canada-status',this.value)">
+          <option value="futuro">Futuro</option>
+          <option value="pesquisando">Pesquisando</option>
+          <option value="planejando">Planejando</option>
+          <option value="iniciado">Iniciado</option>
+        </select>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🏠 INCORPORAÇÃO</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:10px">1 casa/ano — Meta R$ 100k</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--text3)">Status:</span>
+        <select class="status-select" id="incorp-status" onchange="saveLS('incorp-status',this.value)">
+          <option value="prospectando">Prospectando</option>
+          <option value="negociando">Negociando</option>
+          <option value="execucao">Em execução</option>
+          <option value="feito">✅ Concluída</option>
+        </select>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 CONSÓRCIO UBATUBA</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:10px">Meta: R$ 12mm / 12–20 clientes</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:12px;color:var(--text3)">Clientes:</span>
+        <input class="editable-val" id="cons-cli" type="number" value="0" style="width:70px" oninput="updateConsorcio()">
+        <span style="font-size:12px;color:var(--text3)">/20</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:12px;color:var(--text3)">Crédito vendido R$</span>
+        <input class="editable-val" id="cons-valor" type="number" step="0.1" value="0" style="width:80px" oninput="updateConsorcio()">
+        <span style="font-size:12px;color:var(--text3)">mm</span>
+      </div>
+      <div style="margin-top:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px">
+          <span>Meta: R$ 12mm</span><span id="cons-pct" style="color:var(--gold);font-family:'DM Mono',monospace">0%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill green" id="cons-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🏖️ FÉRIAS</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:10px">Meta: 20 dias em Dez/2026</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--text3)">Status:</span>
+        <select class="status-select" id="ferias-status" onchange="saveLS('ferias-status',this.value)">
+          <option value="planejando">Planejando</option>
+          <option value="agendado">Agendado</option>
+          <option value="feito">✅ Realizado</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SAÚDE ═══ -->
+<div class="panel" id="panel-saude">
+  <div class="page-title">Saúde & <span>Hábitos</span></div>
+  <div class="page-sub">Recomposição corporal + energia para viver bem</div>
+
+  <!-- CORPO -->
+  <div class="section-head"><h3>Composição Corporal</h3></div>
+  <div class="grid4" style="margin-bottom:24px">
+    <div class="metric" style="--accent-color:var(--orange)">
+      <div class="lbl">PESO ATUAL (kg)</div>
+      <input class="editable-val" id="peso-atual" type="number" step="0.1" value="0" style="width:100%;margin-top:8px;font-size:20px" oninput="updateSaude()">
+      <div class="sub" id="peso-diff">Meta: −7kg</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--red)">
+      <div class="lbl">GORDURA ATUAL (%)</div>
+      <input class="editable-val" id="gord-atual" type="number" step="0.1" value="24" style="width:100%;margin-top:8px;font-size:20px" oninput="updateSaude()">
+      <div class="progress-block">
+        <div class="progress-label"><span>Meta: 17%</span><span class="pct" id="gord-pct">—</span></div>
+        <div class="progress-track"><div class="progress-fill" id="gord-bar" style="width:50%;background:linear-gradient(90deg,var(--red),var(--orange))"></div></div>
+      </div>
+    </div>
+    <div class="metric" style="--accent-color:var(--green)">
+      <div class="lbl">PESO META (kg)</div>
+      <input class="editable-val" id="peso-meta" type="number" step="0.1" value="0" style="width:100%;margin-top:8px;font-size:20px" oninput="updateSaude()">
+      <div class="sub">Kg a perder: <span id="kg-faltam">—</span></div>
+    </div>
+    <div class="metric" style="--accent-color:var(--teal)">
+      <div class="lbl">PROGRESSO GORDURA</div>
+      <div class="val" id="gord-progresso">24<span class="unit">%</span></div>
+      <div class="sub">Início: 24% → Meta: 17%</div>
+    </div>
+  </div>
+
+  <!-- HÁBITOS SEMANAIS -->
+  <div class="section-head"><h3>Tracker de Hábitos</h3><span>Semana atual</span></div>
+  <div class="card">
+    <div id="habit-tracker"></div>
+    <button class="btn btn-outline" style="margin-top:14px;font-size:12px" onclick="resetWeekHabits()">↺ Nova semana</button>
+  </div>
+
+  <!-- CFP e INGLÊS -->
+  <div class="section-gap">
+    <div class="section-head"><h3>Desenvolvimento</h3></div>
+    <div class="grid3">
+      <div class="card">
+        <div class="card-title">📚 CFP</div>
+        <div style="margin-bottom:12px">
+          <div style="font-size:12px;color:var(--text3);margin-bottom:6px">Progresso do estudo</div>
+          <input class="editable-val" id="cfp-pct" type="number" min="0" max="100" value="0" style="width:80px" oninput="updateCFP()">
+          <span style="font-size:12px;color:var(--text2)"> %</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill purple" id="cfp-bar" style="width:0%"></div></div>
+        <div style="font-size:12px;color:var(--text3);margin-top:10px">Data prova:</div>
+        <input type="date" id="cfp-data" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:4px 8px;font-size:12px;margin-top:4px;outline:none" onchange="saveLS('cfp-data',this.value)">
+      </div>
+      <div class="card">
+        <div class="card-title">🇬🇧 INGLÊS — DUOLINGO</div>
+        <div style="margin-bottom:12px">
+          <div style="font-size:12px;color:var(--text3);margin-bottom:6px">Streak atual (dias)</div>
+          <input class="editable-val" id="duo-streak" type="number" value="0" style="width:80px" oninput="saveLS('duo-streak',this.value)">
+          <span style="font-size:12px;color:var(--text2)"> dias</span>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:4px">Nível atual</div>
+        <select class="status-select" id="duo-nivel" style="width:100%" onchange="saveLS('duo-nivel',this.value)">
+          <option>A1 — Iniciante</option>
+          <option>A2 — Básico</option>
+          <option>B1 — Intermediário</option>
+          <option>B2 — Intermediário avançado</option>
+          <option>C1 — Avançado</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-title">🎾 PERFORMANCE TÊNIS</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px">Jogos no mês</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+          <input class="editable-val" id="tenis-jogos" type="number" value="0" style="width:70px" oninput="saveLS('tenis-jogos',this.value)">
+          <span style="font-size:12px;color:var(--text2)">jogos</span>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:4px">Ranking / nível percebido</div>
+        <select class="status-select" id="tenis-nivel" style="width:100%" onchange="saveLS('tenis-nivel',this.value)">
+          <option>Iniciando</option>
+          <option>Intermediário</option>
+          <option>Avançado amador</option>
+          <option>Competitivo</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TREINO ═══ -->
+<div class="panel" id="panel-treino">
+  <div class="page-title">Rotina de <span>Treino</span></div>
+  <div class="page-sub">Baseada na sua semana real — SP, Ubatuba e viagens · Meta: −7kg / 24%→17% gordura</div>
+
+  <!-- WEEK SELECTOR -->
+  <div style="display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap">
+    <button class="btn btn-gold" id="tab-seg" onclick="showDay('seg')">Segunda</button>
+    <button class="btn btn-outline" id="tab-ter" onclick="showDay('ter')">Terça</button>
+    <button class="btn btn-outline" id="tab-qua" onclick="showDay('qua')">Quarta</button>
+    <button class="btn btn-outline" id="tab-qui" onclick="showDay('qui')">Quinta</button>
+    <button class="btn btn-outline" id="tab-sex" onclick="showDay('sex')">Sexta</button>
+    <button class="btn btn-outline" id="tab-sab" onclick="showDay('sab')">Sábado</button>
+    <button class="btn btn-outline" id="tab-dom" onclick="showDay('dom')">Domingo</button>
+  </div>
+
+  <!-- SEGUNDA -->
+  <div id="day-seg">
+    <div class="card" style="border-left:3px solid var(--orange);margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <span style="font-size:22px">🚌</span>
+        <div>
+          <div style="font-weight:700;font-size:16px">Segunda — Viagem + Mobilidade</div>
+          <div style="font-size:13px;color:var(--text2)">Ubatuba → SP · Saída 06h · Chegada ~11h · 20 min</div>
+        </div>
+        <span style="margin-left:auto;padding:4px 14px;border-radius:20px;background:rgba(251,146,60,.12);color:var(--orange);font-size:11px;font-weight:700">VIAGEM</span>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">NO ÔNIBUS (07h–08h)</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:16px">🔄</span><div><div style="font-size:13px;font-weight:600">Rotação cervical</div><div style="font-size:12px;color:var(--text2)">10x cada lado — alivia tensão</div></div></div>
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:16px">🍑</span><div><div style="font-size:13px;font-weight:600">Ativação de glúteo sentado</div><div style="font-size:12px;color:var(--text2)">3×15 contrações isométricas</div></div></div>
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:16px">🫁</span><div><div style="font-size:13px;font-weight:600">Respiração 4-7-8</div><div style="font-size:12px;color:var(--text2)">5 ciclos — ativa parassimpático</div></div></div>
+        </div>
+      </div>
+      <div class="card" style="background:rgba(251,146,60,.04);border-color:rgba(251,146,60,.2)">
+        <div class="card-title">PROTOCOLO DO DIA</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.8">
+          🚶 Caminhada 10–15 min ao chegar em SP<br>
+          🍽️ Almoço com proteína — não pular<br>
+          💤 Dormir 22h — <strong style="color:var(--orange)">obrigatório</strong> para a terça<br>
+          📵 Sem trabalho no ônibus — modo estratégia
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 10px 10px 0;padding:14px 18px;font-size:13px;color:var(--text2)">
+      <strong style="color:var(--text)">Por que não academia?</strong> Você acorda ~5h, passa 5h no ônibus e ainda trabalha das 11h às 20h. Forçar treino pesado aqui aumenta cortisol, piora recuperação e compromete terça. A segunda é dia de preservar energia.
+    </div>
+  </div>
+
+  <!-- TERÇA -->
+  <div id="day-ter" style="display:none">
+    <div class="card" style="border-left:3px solid var(--purple);margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">💪</span>
+        <div>
+          <div style="font-weight:700;font-size:16px">Terça — Treino A · Push</div>
+          <div style="font-size:13px;color:var(--text2)">SP · Academia completa · 45 min · Alta intensidade</div>
+        </div>
+        <span style="margin-left:auto;padding:4px 14px;border-radius:20px;background:rgba(167,139,250,.12);color:var(--purple);font-size:11px;font-weight:700">FORÇA — PEITO/OMBRO/TRÍCEPS</span>
+      </div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="pipe-table">
+        <thead><tr><th>#</th><th>Exercício</th><th>Músculo</th><th>Séries</th><th>Reps</th><th>Descanso</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">1</td><td style="font-weight:600">Supino Inclinado (halteres)</td><td style="color:var(--text2);font-size:12px">Peito superior</td><td>4</td><td style="font-weight:600;color:var(--gold)">8–10</td><td style="color:var(--text3);font-size:12px">75s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">2</td><td style="font-weight:600">Desenvolvimento Arnold</td><td style="color:var(--text2);font-size:12px">Ombro completo</td><td>3</td><td style="font-weight:600;color:var(--gold)">10–12</td><td style="color:var(--text3);font-size:12px">60s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">3</td><td style="font-weight:600">Crucifixo no cabo (baixo)</td><td style="color:var(--text2);font-size:12px">Peito médio/baixo</td><td>3</td><td style="font-weight:600;color:var(--gold)">12–15</td><td style="color:var(--text3);font-size:12px">60s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">4</td><td style="font-weight:600">Elevação lateral (cabo)</td><td style="color:var(--text2);font-size:12px">Deltóide medial</td><td>3</td><td style="font-weight:600;color:var(--gold)">15</td><td style="color:var(--text3);font-size:12px">45s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">5</td><td style="font-weight:600">Tríceps corda (polia)</td><td style="color:var(--text2);font-size:12px">Tríceps</td><td>3</td><td style="font-weight:600;color:var(--gold)">12–15</td><td style="color:var(--text3);font-size:12px">45s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">6</td><td style="font-weight:600">Flexão diamante <span style="font-size:10px;background:rgba(96,165,250,.12);color:var(--blue);padding:1px 6px;border-radius:4px;margin-left:4px">superset</span></td><td style="color:var(--text2);font-size:12px">Tríceps + peito</td><td>2</td><td style="font-weight:600;color:var(--gold)">Máx.</td><td style="color:var(--text3);font-size:12px">60s</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:14px 18px;font-size:13px;color:var(--text2)">
+      <strong style="color:var(--text)">Dica de tempo:</strong> Faça os exercícios 3 e 4 em superset para economizar ~8 min sem perder qualidade. 45 min com foco vale mais que 1h disperso.
+    </div>
+  </div>
+
+  <!-- QUARTA -->
+  <div id="day-qua" style="display:none">
+    <div class="card" style="border-left:3px solid var(--blue);margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">💪</span>
+        <div>
+          <div style="font-weight:700;font-size:16px">Quarta — Treino B · Pull</div>
+          <div style="font-size:13px;color:var(--text2)">SP · Academia completa · 45 min · Ônibus 21h → Ubatuba 01h15</div>
+        </div>
+        <span style="margin-left:auto;padding:4px 14px;border-radius:20px;background:rgba(96,165,250,.12);color:var(--blue);font-size:11px;font-weight:700">FORÇA — COSTAS/BÍCEPS</span>
+      </div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="pipe-table">
+        <thead><tr><th>#</th><th>Exercício</th><th>Músculo</th><th>Séries</th><th>Reps</th><th>Descanso</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">1</td><td style="font-weight:600">Puxada frontal (pegada larga)</td><td style="color:var(--text2);font-size:12px">Latíssimo</td><td>4</td><td style="font-weight:600;color:var(--gold)">8–10</td><td style="color:var(--text3);font-size:12px">75s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">2</td><td style="font-weight:600">Remada curvada com barra</td><td style="color:var(--text2);font-size:12px">Costas médias</td><td>4</td><td style="font-weight:600;color:var(--gold)">8–10</td><td style="color:var(--text3);font-size:12px">75s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">3</td><td style="font-weight:600">Remada unilateral (halter)</td><td style="color:var(--text2);font-size:12px">Costas + core</td><td>3</td><td style="font-weight:600;color:var(--gold)">10–12</td><td style="color:var(--text3);font-size:12px">60s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">4</td><td style="font-weight:600">Rosca direta com barra</td><td style="color:var(--text2);font-size:12px">Bíceps</td><td>3</td><td style="font-weight:600;color:var(--gold)">10–12</td><td style="color:var(--text3);font-size:12px">60s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">5</td><td style="font-weight:600">Rosca martelo alternada</td><td style="color:var(--text2);font-size:12px">Bíceps + braquiorradial</td><td>3</td><td style="font-weight:600;color:var(--gold)">12</td><td style="color:var(--text3);font-size:12px">45s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">6</td><td style="font-weight:600">Face pull (cabo)</td><td style="color:var(--text2);font-size:12px">Deltóide posterior</td><td>3</td><td style="font-weight:600;color:var(--gold)">15</td><td style="color:var(--text3);font-size:12px">45s</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 10px 10px 0;padding:14px 18px;font-size:13px;color:var(--text2)">
+      <strong style="color:var(--text)">Noite de retorno:</strong> Ônibus 21h. Sem trabalho, sem telas pesadas. Chegará 01h15 — beba água, não coma pesado, durma direto.
+    </div>
+  </div>
+
+  <!-- QUINTA -->
+  <div id="day-qui" style="display:none">
+    <div class="card" style="border-left:3px solid var(--purple);margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">🦵</span>
+        <div>
+          <div style="font-weight:700;font-size:16px">Quinta — Pernas + Core (leve)</div>
+          <div style="font-size:13px;color:var(--text2)">Ubatuba · Chegou 01h15 · Acordar sem culpa às 7h30 · 35 min</div>
+        </div>
+        <span style="margin-left:auto;padding:4px 14px;border-radius:20px;background:rgba(167,139,250,.12);color:var(--purple);font-size:11px;font-weight:700">RECUPERAÇÃO + PERNAS</span>
+      </div>
+    </div>
+    <div style="background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.2);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--text2);margin-bottom:16px">
+      <strong style="color:var(--teal)">Acorde sem culpa às 7h30/8h.</strong> Você dormiu ~6h. Forçar as 5h30 aumenta cortisol, piora composição corporal e drena energia. Treino leve e inteligente vale mais que treino pesado exausto.
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="pipe-table">
+        <thead><tr><th>#</th><th>Exercício</th><th>Músculo</th><th>Séries</th><th>Reps</th><th>Descanso</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">1</td><td style="font-weight:600">Agachamento goblet</td><td style="color:var(--text2);font-size:12px">Quadríceps + glúteo</td><td>3</td><td style="font-weight:600;color:var(--gold)">15</td><td style="color:var(--text3);font-size:12px">60s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">2</td><td style="font-weight:600">Afundo alternado</td><td style="color:var(--text2);font-size:12px">Glúteo + equilíbrio tênis</td><td>3</td><td style="font-weight:600;color:var(--gold)">10 cada</td><td style="color:var(--text3);font-size:12px">60s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">3</td><td style="font-weight:600">Mesa flexora</td><td style="color:var(--text2);font-size:12px">Posterior de coxa</td><td>3</td><td style="font-weight:600;color:var(--gold)">12–15</td><td style="color:var(--text3);font-size:12px">60s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">4</td><td style="font-weight:600">Panturrilha em pé</td><td style="color:var(--text2);font-size:12px">Gastrocnêmio</td><td>3</td><td style="font-weight:600;color:var(--gold)">20</td><td style="color:var(--text3);font-size:12px">45s</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">5</td><td style="font-weight:600">Prancha + prancha lateral</td><td style="color:var(--text2);font-size:12px">Core estabilizador</td><td>3</td><td style="font-weight:600;color:var(--gold)">30–45s</td><td style="color:var(--text3);font-size:12px">45s</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;font-size:13px;color:var(--text2)">
+      <strong style="color:var(--text)">Tarde/noite:</strong> Prioridade máxima para Lohaine. Jantar juntos, sem celular. Ela ficou sozinha seg–qua — esse tempo é investimento no seu maior pilar.
+    </div>
+  </div>
+
+  <!-- SEXTA -->
+  <div id="day-sex" style="display:none">
+    <div class="card" style="border-left:3px solid var(--green);margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">🎾</span>
+        <div>
+          <div style="font-weight:700;font-size:16px">Sexta — Tênis + Mobilidade</div>
+          <div style="font-size:13px;color:var(--text2)">Ubatuba · Tênis 10h · Trabalho para às 17h–18h</div>
+        </div>
+        <span style="margin-left:auto;padding:4px 14px;border-radius:20px;background:rgba(62,207,142,.12);color:var(--green);font-size:11px;font-weight:700">TÊNIS = TREINO</span>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🎾 TÊNIS 10H — O TREINO DO DIA</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.8">
+          1h de tênis = <strong style="color:var(--green)">400–600 kcal</strong><br>
+          Agilidade, potência de pernas, reflexos<br>
+          Coordenação e cardio completo<br>
+          <span style="color:var(--text3);font-size:12px">Não precisa ir à academia na sexta</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">ATIVAÇÃO PRÉ-TÊNIS (15 min)</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.9">
+          🔄 Mobilidade de quadril — hip circles<br>
+          🍑 Ativação de glúteo — ponte + agachamento<br>
+          🦵 Circundação de tornozelo<br>
+          💪 Rotação de ombro + tronco com raquete
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:14px 18px;font-size:13px;color:var(--text2)">
+      <strong style="color:var(--text)">Meta da sexta:</strong> Parar às 17h–18h. Tarde livre. Isso não é fraqueza — é a recarga que alimenta a semana seguinte.
+    </div>
+  </div>
+
+  <!-- SÁBADO -->
+  <div id="day-sab" style="display:none">
+    <div class="card" style="border-left:3px solid var(--green);margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">🎾</span>
+        <div>
+          <div style="font-weight:700;font-size:16px">Sábado — Tênis + Funcional</div>
+          <div style="font-size:13px;color:var(--text2)">Ubatuba · Tênis 08h–09h30 · Jogo possível à tarde · ~30 min funcional</div>
+        </div>
+        <span style="margin-left:auto;padding:4px 14px;border-radius:20px;background:rgba(62,207,142,.12);color:var(--green);font-size:11px;font-weight:700">TÊNIS + FUNCIONAL</span>
+      </div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+      <table class="pipe-table">
+        <thead><tr><th>#</th><th>Exercício</th><th>Foco</th><th>Séries</th><th>Reps</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">1</td><td style="font-weight:600">Agachamento com salto</td><td style="color:var(--green);font-size:12px">Potência tênis</td><td>3</td><td style="font-weight:600;color:var(--gold)">10</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">2</td><td style="font-weight:600">Deslocamento lateral (band)</td><td style="color:var(--green);font-size:12px">Agilidade tênis</td><td>3</td><td style="font-weight:600;color:var(--gold)">12 cada</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">3</td><td style="font-weight:600">Rotação com medicine ball</td><td style="color:var(--green);font-size:12px">Core rotacional</td><td>3</td><td style="font-weight:600;color:var(--gold)">15 cada</td></tr>
+          <tr><td style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">4</td><td style="font-weight:600">Polichinelo + burpee (circuito)</td><td style="color:var(--orange);font-size:12px">Queima gordura</td><td>3 rounds</td><td style="font-weight:600;color:var(--gold)">30s cada</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid2">
+      <div class="card" style="background:rgba(62,207,142,.04);border-color:rgba(62,207,142,.2)">
+        <div class="card-title" style="color:var(--green)">FOCO TÉCNICO TÊNIS</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.9">→ Backhand com rotação de quadril<br>→ Posicionamento nos pés<br>→ Antecipação de jogada<br>→ Saque com ritmo, não com força</div>
+      </div>
+      <div class="card">
+        <div class="card-title">RECUPERAÇÃO PÓS-TÊNIS</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.9">→ Hidratação imediata — 500ml<br>→ Alongamento posterior de coxa<br>→ Rolo de espuma nas panturrilhas<br>→ Proteína em até 30 min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOMINGO -->
+  <div id="day-dom" style="display:none">
+    <div class="card" style="border-left:3px solid var(--text3);margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">😴</span>
+        <div>
+          <div style="font-weight:700;font-size:16px">Domingo — Recuperação Total</div>
+          <div style="font-size:13px;color:var(--text2)">Família · Espiritualidade · Possível jogo de tênis como lazer</div>
+        </div>
+        <span style="margin-left:auto;padding:4px 14px;border-radius:20px;background:rgba(74,82,112,.3);color:var(--text2);font-size:11px;font-weight:700">RECOVERY</span>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">PROTOCOLO DO DIA</div>
+        <div style="font-size:13px;color:var(--text2);line-height:2">
+          🙏 Acordar sem alarme — oração e meditação<br>
+          ☕ Café com calma com Lohaine — sem telas<br>
+          🎾 Tênis se houver jogo — como lazer, não treino<br>
+          🚶 Caminhada 30 min com Lohaine<br>
+          📋 15 min planejando a semana<br>
+          💤 Dormir às 22h — sai às 06h segunda
+        </div>
+      </div>
+      <div class="card" style="background:rgba(62,207,142,.04);border-color:rgba(62,207,142,.2)">
+        <div class="card-title" style="color:var(--green)">POR QUE DESCANSO IMPORTA</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.9">
+          É durante o repouso que o músculo <strong style="color:var(--green)">cresce</strong><br>
+          e a gordura é <strong style="color:var(--green)">oxidada</strong>.<br><br>
+          Quem descansa bem no domingo treina<br>
+          <strong style="color:var(--gold)">20% melhor</strong> na terça.<br><br>
+          O descanso não é preguiça — é parte do protocolo.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMO SEMANA -->
+  <div style="margin-top:28px">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px">RESUMO DA SEMANA</div>
+    <div class="grid4">
+      <div class="card" style="text-align:center;padding:16px">
+        <div style="font-size:24px;margin-bottom:6px">💪</div>
+        <div style="font-size:12px;font-weight:700">Terça + Quarta</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:4px">Força Push/Pull</div>
+      </div>
+      <div class="card" style="text-align:center;padding:16px">
+        <div style="font-size:24px;margin-bottom:6px">🦵</div>
+        <div style="font-size:12px;font-weight:700">Quinta</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:4px">Pernas leve</div>
+      </div>
+      <div class="card" style="text-align:center;padding:16px">
+        <div style="font-size:24px;margin-bottom:6px">🎾</div>
+        <div style="font-size:12px;font-weight:700">Sex + Sáb</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:4px">Tênis</div>
+      </div>
+      <div class="card" style="text-align:center;padding:16px">
+        <div style="font-size:24px;margin-bottom:6px">😴</div>
+        <div style="font-size:12px;font-weight:700">Domingo</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:4px">Recovery</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MACRO ═══ -->
+<div class="panel" id="panel-macro">
+  <div class="page-title">Dados <span>Macro</span></div>
+  <div class="page-sub">Indicadores econômicos relevantes para sua carteira e clientes · Atualização manual mensal</div>
+
+  <!-- BRASIL -->
+  <div class="section-head"><h3>Brasil</h3><span>Atualizar após reunião do Copom / divulgações</span></div>
+  <div class="grid4" style="margin-bottom:24px">
+    <div class="metric" style="--accent-color:var(--gold)">
+      <div class="lbl">SELIC (% a.a.)</div>
+      <input class="editable-val" id="m-selic" type="number" step="0.25" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Meta Copom</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--orange)">
+      <div class="lbl">IPCA ACUM. 12M (%)</div>
+      <input class="editable-val" id="m-ipca" type="number" step="0.1" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Meta: 3% ±1,5pp</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--blue)">
+      <div class="lbl">PIB CRESCIMENTO (%)</div>
+      <input class="editable-val" id="m-pib" type="number" step="0.1" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Projeção anual</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--red)">
+      <div class="lbl">USD/BRL</div>
+      <input class="editable-val" id="m-dolar" type="number" step="0.01" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Câmbio corrente</div>
+    </div>
+  </div>
+  <div class="grid4" style="margin-bottom:28px">
+    <div class="metric" style="--accent-color:var(--purple)">
+      <div class="lbl">CDI (% a.a.)</div>
+      <input class="editable-val" id="m-cdi" type="number" step="0.25" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Benchmark renda fixa</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--teal)">
+      <div class="lbl">IBOVESPA (pts)</div>
+      <input class="editable-val" id="m-ibov" type="number" step="100" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Índice principal</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--green)">
+      <div class="lbl">DESEMPREGO (%)</div>
+      <input class="editable-val" id="m-desemprego" type="number" step="0.1" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Taxa PNAD</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--gold)">
+      <div class="lbl">DÍV. PÚBLICA / PIB (%)</div>
+      <input class="editable-val" id="m-divida" type="number" step="0.1" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Sustentabilidade fiscal</div>
+    </div>
+  </div>
+
+  <!-- MERCADOS GLOBAIS -->
+  <div class="section-head"><h3>Mercados Globais</h3></div>
+  <div class="grid4" style="margin-bottom:28px">
+    <div class="metric" style="--accent-color:var(--blue)">
+      <div class="lbl">FED FUNDS RATE (%)</div>
+      <input class="editable-val" id="m-fed" type="number" step="0.25" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Banco central EUA</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--gold)">
+      <div class="lbl">S&P 500 (pts)</div>
+      <input class="editable-val" id="m-sp500" type="number" step="10" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Bolsa americana</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--orange)">
+      <div class="lbl">OURO (USD/oz)</div>
+      <input class="editable-val" id="m-ouro" type="number" step="1" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Safe haven</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--teal)">
+      <div class="lbl">PETRÓLEO WTI (USD)</div>
+      <input class="editable-val" id="m-petroleo" type="number" step="0.5" value="0" style="width:100%;margin-top:6px;font-size:20px" oninput="saveMacro()">
+      <div class="sub">Brent / WTI</div>
+    </div>
+  </div>
+
+  <!-- ANÁLISE NARRATIVA -->
+  <div class="section-head"><h3>Análise & Contexto</h3><span>Sua leitura do momento — atualizar mensalmente</span></div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">🇧🇷 CENÁRIO BRASIL</div>
+      <textarea class="reflect-input" id="m-analise-br" placeholder="Ex: Selic em queda, inflação controlada, risco fiscal em monitoramento..." oninput="saveMacro()" style="min-height:100px"></textarea>
+    </div>
+    <div class="card">
+      <div class="card-title">🌍 CENÁRIO GLOBAL</div>
+      <textarea class="reflect-input" id="m-analise-global" placeholder="Ex: Fed dovish, S&P próximo de máximas, risco geopolítico elevado..." oninput="saveMacro()" style="min-height:100px"></textarea>
+    </div>
+    <div class="card">
+      <div class="card-title">💼 IMPACTO NAS CARTEIRAS (MFO/CVM)</div>
+      <textarea class="reflect-input" id="m-impacto" placeholder="Ex: Momento favorável para alocação em crédito privado, reduzir duration..." oninput="saveMacro()" style="min-height:100px"></textarea>
+    </div>
+    <div class="card">
+      <div class="card-title">🗓️ PRÓXIMOS EVENTOS</div>
+      <textarea class="reflect-input" id="m-eventos" placeholder="Ex: Copom 05/jun, IPCA 09/jun, payroll EUA 07/jun..." oninput="saveMacro()" style="min-height:100px"></textarea>
+    </div>
+  </div>
+
+  <!-- LAST UPDATE -->
+  <div style="margin-top:20px;font-size:12px;color:var(--text3)">
+    Última atualização: <span id="macro-last-update">—</span>
+    <button class="btn btn-outline" style="margin-left:12px;font-size:11px;padding:4px 12px" onclick="stampMacroDate()">Marcar como atualizado agora</button>
+  </div>
+</div>
+
+<!-- ═══ EVOLUÇÃO ANUAL ═══ -->
+<div class="panel" id="panel-evolucao">
+  <div class="page-title">Evolução <span>Anual</span></div>
+  <div class="page-sub">Orçado vs Realizado · Semanal e Mensal · Alerta automático por frente</div>
+
+  <div style="display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap">
+    <button class="btn btn-gold"    id="ev-tab-semana" onclick="evShowTab('semana')">📅 Semana Atual</button>
+    <button class="btn btn-outline" id="ev-tab-mensal" onclick="evShowTab('mensal')">📆 Visão Mensal</button>
+    <button class="btn btn-outline" id="ev-tab-input"  onclick="evShowTab('input')">✏️ Inserir Dados</button>
+  </div>
+
+  <!-- ── SEMANA ── -->
+  <div id="ev-semana">
+    <div class="section-head"><h3>Semana Atual</h3><span id="ev-semana-label">—</span></div>
+    <div class="grid3" style="margin-bottom:24px">
+      <div class="metric" style="--accent-color:var(--gold)">
+        <div class="lbl">TAREFAS CONCLUÍDAS</div>
+        <div class="val"><span id="ev-tasks-done">0</span><span class="unit" id="ev-tasks-total">/0</span></div>
+        <div class="progress-block">
+          <div class="progress-label"><span>Meta: 100%</span><span class="pct" id="ev-tasks-pct">0%</span></div>
+          <div class="progress-track"><div class="progress-fill" id="ev-tasks-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="metric" style="--accent-color:var(--green)">
+        <div class="lbl">RITUAL DA MANHÃ HOJE</div>
+        <div class="val"><span id="ev-ritual-done">0</span><span class="unit">/8</span></div>
+        <div class="progress-block">
+          <div class="progress-label"><span>Itens completos</span><span class="pct" id="ev-ritual-pct">0%</span></div>
+          <div class="progress-track"><div class="progress-fill green" id="ev-ritual-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="metric" style="--accent-color:var(--purple)">
+        <div class="lbl">HÁBITOS DA SEMANA</div>
+        <div class="val"><span id="ev-habits-done">0</span><span class="unit" id="ev-habits-total">/49</span></div>
+        <div class="progress-block">
+          <div class="progress-label"><span>Checks feitos</span><span class="pct" id="ev-habits-pct">0%</span></div>
+          <div class="progress-track"><div class="progress-fill purple" id="ev-habits-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head"><h3>Atingimento do Mês Atual</h3><span id="ev-mes-label">—</span></div>
+    <div id="ev-frentes-semana"></div>
+
+    <div style="margin-top:24px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px">⚡ ALERTA — ANÁLISE AUTOMÁTICA</div>
+      <div id="ev-alerta" style="background:linear-gradient(135deg,rgba(200,169,110,.08),rgba(200,169,110,.03));border:1px solid rgba(200,169,110,.2);border-radius:var(--radius);padding:20px 24px;font-size:13.5px;color:var(--text2);line-height:1.9"></div>
+    </div>
+  </div>
+
+  <!-- ── MENSAL ── -->
+  <div id="ev-mensal" style="display:none">
+    <div class="section-head"><h3>Evolução Mensal 2026</h3><span>Orçado × Realizado × Crescimento M/M</span></div>
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:20px" id="ev-month-tabs"></div>
+    <div id="ev-mensal-content"></div>
+  </div>
+
+  <!-- ── INPUT ── -->
+  <div id="ev-input" style="display:none">
+    <div class="section-head"><h3>Inserir Dados</h3><span>Preencha semanalmente — menos de 5 min</span></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title" style="color:var(--gold)">💼 MFO / WEALTH</div>
+        <div class="reflect-item"><label>AuC realizado este mês (R$ mm)</label>
+          <input class="reflect-input" id="inp-mfo-auc" type="number" step="0.1" placeholder="Ex: 65" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+        <div class="reflect-item"><label>Receita realizada este mês (R$ mil)</label>
+          <input class="reflect-input" id="inp-mfo-rec" type="number" placeholder="Ex: 120" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+        <div class="reflect-item"><label>Novos clientes captados no mês</label>
+          <input class="reflect-input" id="inp-mfo-cli" type="number" placeholder="Ex: 2" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--blue)">📊 CONSULTORIA CVM</div>
+        <div class="reflect-item"><label>AuC realizado este mês (R$ mm)</label>
+          <input class="reflect-input" id="inp-cvm-auc" type="number" step="0.1" placeholder="Ex: 18" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+        <div class="reflect-item"><label>Receita realizada este mês (R$ mil)</label>
+          <input class="reflect-input" id="inp-cvm-rec" type="number" placeholder="Ex: 22" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+        <div class="reflect-item"><label>Clientes ativos</label>
+          <input class="reflect-input" id="inp-cvm-cli" type="number" placeholder="Ex: 8" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--purple)">💪 TREINO & SAÚDE</div>
+        <div class="reflect-item"><label>Treinos realizados este mês</label>
+          <input class="reflect-input" id="inp-treinos-real" type="number" placeholder="Ex: 15" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+        <div class="reflect-item"><label>Orações esta semana</label>
+          <input class="reflect-input" id="inp-oracoes" type="number" placeholder="Ex: 4" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+        <div class="reflect-item"><label>Peso atual (kg)</label>
+          <input class="reflect-input" id="inp-peso" type="number" step="0.1" placeholder="Ex: 88.5" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--teal)">💰 RENDA & CONSÓRCIO</div>
+        <div class="reflect-item"><label>Renda bruta recebida este mês (R$ mil)</label>
+          <input class="reflect-input" id="inp-renda-mes" type="number" placeholder="Ex: 45" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+        <div class="reflect-item"><label>Crédito consórcio vendido este mês (R$ mm)</label>
+          <input class="reflect-input" id="inp-cons-valor" type="number" step="0.1" placeholder="Ex: 0.8" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+        <div class="reflect-item"><label>Clientes consórcio captados</label>
+          <input class="reflect-input" id="inp-cons-cli" type="number" placeholder="Ex: 1" style="min-height:auto;padding:8px 14px" oninput="autoSaveInput()"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-title">MÊS DE REFERÊNCIA</div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <select id="inp-mes-ref" class="tag-select" style="font-size:13px;padding:8px 14px">
+          <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option>
+          <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
+          <option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option>
+          <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
+        </select>
+        <button class="btn btn-gold" onclick="saveMonthData()">💾 Salvar este mês</button>
+        <span style="font-size:12px;color:var(--text3)" id="inp-last-saved">—</span>
+      </div>
+    </div>
+  </div>
+<!-- ═══ TRELLO ═══ -->
+<div class="panel" id="panel-trello">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:4px">
+    <div class="page-title">Time — <span>Trello</span></div>
+    <button class="btn btn-outline" onclick="loadTrello()" id="trello-refresh-btn" style="font-size:12px">↻ Atualizar</button>
+  </div>
+  <div class="page-sub" id="trello-board-name">Virtue MFO · Carregando...</div>
+
+  <!-- FILTROS -->
+  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+    <span style="font-size:12px;color:var(--text3);font-weight:600;letter-spacing:1px">FILTRAR:</span>
+    <button class="btn btn-gold" id="tf-todos"     onclick="trelloFilter('todos')">Todos</button>
+    <button class="btn btn-outline" id="tf-atrasado" onclick="trelloFilter('atrasado')">🔴 Atrasados</button>
+    <button class="btn btn-outline" id="tf-hoje"    onclick="trelloFilter('hoje')">🟡 Vencem hoje</button>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px;color:var(--text3)">Membro:</span>
+      <select id="trello-member-filter" class="tag-select" onchange="trelloFilterMember(this.value)">
+        <option value="">Todos</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ESTADO -->
+  <div id="trello-loading" style="text-align:center;padding:60px;color:var(--text3);font-size:14px">
+    <div style="font-size:32px;margin-bottom:12px">📋</div>
+    Clique em "Atualizar" para carregar o board
+  </div>
+  <div id="trello-error" style="display:none;background:rgba(245,101,101,.08);border:1px solid rgba(245,101,101,.2);border-radius:10px;padding:20px;color:var(--red);font-size:13px"></div>
+
+  <!-- STATS RÁPIDOS -->
+  <div class="grid4" id="trello-stats" style="display:none;margin-bottom:24px"></div>
+
+  <!-- BOARD -->
+  <div id="trello-board" style="display:none">
+    <div id="trello-lists" style="display:flex;gap:16px;overflow-x:auto;padding-bottom:16px;align-items:flex-start"></div>
+  </div>
+</div>
+
+</main>
+
+<div id="toast">✓ Salvo</div>
+
+<script>
+// ─── STATE ───
+const DAYS = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const MONTHS = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+const PIPE_DATA = [
+  {name:'G. Bifi',vol:'35mm'}, {name:'D. Kobata',vol:'35mm'},
+  {name:'GEX',vol:'100mm'}, {name:'Damas',vol:'20mm'},
+  {name:'Alex',vol:'10mm'}, {name:'Eduarda Medina',vol:'10mm'},
+  {name:'Irmãos Lesme',vol:'10mm'}, {name:'Saraiva',vol:'20mm'},
+  {name:'Calleb',vol:'10mm'}, {name:'Tiger',vol:'20mm'},
+  {name:'VG',vol:'10mm'}, {name:'Diogo',vol:'4mm'},
+  {name:'Anthony',vol:'2mm'}, {name:'Bruno',vol:'2mm'},
+];
+
+const HABITS = [
+  {name:'Oração',icon:'🙏'}, {name:'Meditação',icon:'🧘'},
+  {name:'Treino',icon:'💪'}, {name:'Tênis',icon:'🎾'},
+  {name:'Inglês',icon:'🇬🇧'}, {name:'Tempo com Lohaine',icon:'❤️'},
+  {name:'Sem trabalho após 20h',icon:'🌙'},
+];
+
+// ─── INIT ───
+function init() {
+  checkDayReset();
+  updateDateTime();
+  setInterval(updateDateTime, 60000);
+  renderPipe();
+  renderHabits();
+  loadAll();
+}
+
+function updateDateTime() {
+  const now = new Date();
+  const d = DAYS[now.getDay()];
+  const dateStr = `${d}, ${now.getDate()} de ${MONTHS[now.getMonth()]} de ${now.getFullYear()}`;
+  const el = document.getElementById('today-meta');
+  const sb = document.getElementById('sidebar-date');
+  if(el) el.textContent = dateStr;
+  if(sb) sb.textContent = dateStr;
+}
+
+// ─── RESET DIÁRIO ───
+function todayKey() {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;
+}
+function weekKey() {
+  const n = new Date();
+  // semana começa na segunda
+  const day = n.getDay() === 0 ? 6 : n.getDay() - 1;
+  const mon = new Date(n); mon.setDate(n.getDate() - day);
+  return `${mon.getFullYear()}-W${String(mon.getMonth()+1).padStart(2,'0')}-${String(mon.getDate()).padStart(2,'0')}`;
+}
+
+function checkDayReset() {
+  const lastDay  = loadLS('last-day-key', '');
+  const lastWeek = loadLS('last-week-key', '');
+  const today    = todayKey();
+  const thisWeek = weekKey();
+
+  // ── RESET DIÁRIO ──
+  if(lastDay !== today) {
+    // Arquivar reflexões do dia anterior
+    if(lastDay) {
+      const archive = loadLS('reflections-archive', []);
+      const prev = {
+        date: lastDay,
+        conquista: loadLS('r-conquista',''),
+        amanha:    loadLS('r-amanha',''),
+        lohaine:   loadLS('r-lohaine',''),
+        espirito:  loadLS('r-espirito',''),
+        stars:     loadLS('stars', 0),
+        energy:    loadLS('energy', 0),
+      };
+      if(prev.conquista || prev.amanha || prev.lohaine || prev.espirito) {
+        archive.unshift(prev); // mais recente primeiro
+        if(archive.length > 30) archive.pop(); // manter 30 dias
+        saveLS('reflections-archive', archive);
+      }
+
+      // Guardar "o que ficou pra amanhã" como tarefa pendente
+      const pendingNote = loadLS('r-amanha','');
+      if(pendingNote) {
+        const tasks = loadLS('tasks', []);
+        const alreadyExists = tasks.some(t => t.text === pendingNote && !t.done);
+        if(!alreadyExists) {
+          tasks.unshift({ text: '→ ' + pendingNote, tag: 'pessoal', done: false, id: Date.now(), fromYesterday: true });
+          saveLS('tasks', tasks);
+        }
+      }
+    }
+
+    // Limpar dados do dia
+    saveLS('ritual', new Array(8).fill(false));
+    saveLS('energy', 0);
+    saveLS('r-conquista', '');
+    saveLS('r-amanha', '');
+    saveLS('r-lohaine', '');
+    saveLS('r-espirito', '');
+    saveLS('stars', 0);
+
+    // Remover tarefas concluídas
+    const tasks = loadLS('tasks', []);
+    saveLS('tasks', tasks.filter(t => !t.done));
+
+    saveLS('last-day-key', today);
+  }
+
+  // ── RESET SEMANAL (segunda-feira) ──
+  if(lastWeek !== thisWeek) {
+    saveLS('habits-week', {});
+    saveLS('last-week-key', thisWeek);
+  }
+}
+
+// ─── NAVIGATION ───
+function goTo(id) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ─── LOCALSTORAGE ───
+function saveLS(key, val) {
+  localStorage.setItem('dash_'+key, JSON.stringify(val));
+  showToast();
+  updateSidebar();
+}
+function loadLS(key, def='') {
+  const v = localStorage.getItem('dash_'+key);
+  return v !== null ? JSON.parse(v) : def;
+}
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1500);
+}
+
+// ─── RITUAL ───
+function toggleRitual(i) {
+  const items = document.querySelectorAll('.ritual-item');
+  const done = loadLS('ritual', new Array(8).fill(false));
+  done[i] = !done[i];
+  saveLS('ritual', done);
+  items[i].classList.toggle('done', done[i]);
+}
+
+// ─── ENERGY ───
+function setEnergy(v) {
+  saveLS('energy', v);
+  document.querySelectorAll('.energy-btn').forEach((b,i)=>{
+    b.classList.toggle('selected', i+1 === v);
+  });
+}
+
+// ─── TASKS ───
+function addTask() {
+  const input = document.getElementById('new-task-input');
+  const tag   = document.getElementById('new-task-tag').value;
+  const prio  = document.getElementById('new-task-prioridade').value;
+  const data  = document.getElementById('new-task-data').value;
+  const text  = input.value.trim();
+  if(!text) return;
+  const tasks = loadLS('tasks', []);
+  tasks.push({text, tag, prio, data, done:false, id:Date.now()});
+  saveLS('tasks', tasks);
+  input.value = '';
+  document.getElementById('new-task-data').value = '';
+  renderTasks();
+}
+function toggleTask(id) {
+  const tasks = loadLS('tasks', []);
+  const t = tasks.find(t=>t.id===id);
+  if(t) t.done = !t.done;
+  saveLS('tasks', tasks);
+  renderTasks();
+}
+function deleteTask(id) {
+  const tasks = loadLS('tasks', []).filter(t=>t.id!==id);
+  saveLS('tasks', tasks);
+  renderTasks();
+}
+function movePrio(id, dir) {
+  const tasks = loadLS('tasks', []);
+  const idx = tasks.findIndex(t=>t.id===id);
+  if(idx < 0) return;
+  const newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= tasks.length) return;
+  [tasks[idx], tasks[newIdx]] = [tasks[newIdx], tasks[idx]];
+  saveLS('tasks', tasks);
+  renderTasks();
+}
+function setPrioInline(id, val) {
+  const tasks = loadLS('tasks', []);
+  const t = tasks.find(t=>t.id===id);
+  if(t) { t.prio = val; saveLS('tasks', tasks); renderTasks(); }
+}
+function renderTasks() {
+  let tasks = loadLS('tasks', []);
+  const sortEl = document.getElementById('task-sort');
+  const sort = sortEl ? sortEl.value : 'prioridade';
+  const prioOrder = {alta:0, media:1, baixa:2};
+
+  // sort
+  const pending = tasks.filter(t=>!t.done);
+  const done    = tasks.filter(t=>t.done);
+
+  if(sort === 'prioridade') {
+    pending.sort((a,b) => (prioOrder[a.prio]??1) - (prioOrder[b.prio]??1));
+  } else if(sort === 'data') {
+    pending.sort((a,b) => {
+      if(!a.data && !b.data) return 0;
+      if(!a.data) return 1;
+      if(!b.data) return -1;
+      return new Date(a.data) - new Date(b.data);
+    });
+  } else if(sort === 'area') {
+    pending.sort((a,b) => (a.tag||'').localeCompare(b.tag||''));
+  }
+  // criacao = default order (id = timestamp)
+  const sorted = [...pending, ...done];
+
+  const list  = document.getElementById('task-list');
+  const count = document.getElementById('tasks-count');
+  count.textContent = `${done.length}/${tasks.length} concluídas`;
+
+  const prioConfig = {
+    alta:  {label:'🔴 Alta',  color:'rgba(245,101,101,.15)', border:'rgba(245,101,101,.35)', text:'var(--red)'},
+    media: {label:'🟡 Média', color:'rgba(251,146,60,.1)',   border:'rgba(251,146,60,.25)',  text:'var(--orange)'},
+    baixa: {label:'🟢 Baixa', color:'rgba(62,207,142,.08)', border:'rgba(62,207,142,.2)',   text:'var(--green)'},
+  };
+
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  list.innerHTML = sorted.map((t,i) => {
+    const pc = prioConfig[t.prio||'media'];
+    let dateBadge = '';
+    if(t.data) {
+      const d = new Date(t.data+'T00:00:00');
+      const diff = d - today;
+      const fmt = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+      if(diff < 0 && !t.done) {
+        dateBadge = `<span style="font-size:10px;background:rgba(245,101,101,.15);color:var(--red);padding:1px 7px;border-radius:4px;font-weight:600">⚠ ${fmt}</span>`;
+      } else if(diff === 0 && !t.done) {
+        dateBadge = `<span style="font-size:10px;background:rgba(251,146,60,.15);color:var(--orange);padding:1px 7px;border-radius:4px;font-weight:600">🕐 Hoje</span>`;
+      } else {
+        dateBadge = `<span style="font-size:10px;color:var(--text3);padding:1px 4px">📅 ${fmt}</span>`;
+      }
+    }
+    return `
+    <div class="task-item ${t.done?'done-task':''}" style="border-left:3px solid ${t.done?'var(--border)':pc.border};background:${t.done?'var(--surface)':pc.color}">
+      <div style="display:flex;flex-direction:column;gap:3px;margin-right:4px">
+        <button onclick="movePrio(${t.id},-1)" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:10px;line-height:1;padding:1px" title="Subir">▲</button>
+        <button onclick="movePrio(${t.id},1)"  style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:10px;line-height:1;padding:1px" title="Descer">▼</button>
+      </div>
+      <div class="task-cb ${t.done?'checked':''}" onclick="toggleTask(${t.id})">✓</div>
+      <div style="flex:1;min-width:0">
+        <div class="task-text">${t.text}${t.fromYesterday?'<span style="font-size:10px;color:var(--orange);font-weight:600;margin-left:6px">ontem</span>':''}</div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap">
+          ${dateBadge}
+          <select onchange="setPrioInline(${t.id},this.value)" style="background:transparent;border:none;font-size:10px;color:${pc.text};font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;padding:0;outline:none" ${t.done?'disabled':''}>
+            <option value="alta"  ${t.prio==='alta' ?'selected':''}>🔴 Alta</option>
+            <option value="media" ${t.prio==='media'||!t.prio?'selected':''}>🟡 Média</option>
+            <option value="baixa" ${t.prio==='baixa'?'selected':''}>🟢 Baixa</option>
+          </select>
+        </div>
+      </div>
+      <span class="task-tag tag-${t.tag}">${(t.tag||'').toUpperCase()}</span>
+      <button onclick="deleteTask(${t.id})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:2px 6px;flex-shrink:0" title="Remover">×</button>
+    </div>`;
+  }).join('');
+}
+
+// ─── REFLECTION ───
+function saveReflection() {
+  ['r-conquista','r-amanha','r-lohaine','r-espirito'].forEach(id=>{
+    saveLS(id, document.getElementById(id).value);
+  });
+}
+function setStar(v) {
+  saveLS('stars', v);
+  document.querySelectorAll('.star-btn').forEach((b,i)=>{
+    b.classList.toggle('lit', i<v);
+  });
+}
+
+function renderReflectionHistory() {
+  const archive = loadLS('reflections-archive', []);
+  const container = document.getElementById('reflection-history');
+  if(!container) return;
+  if(archive.length === 0) {
+    container.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:10px 0">Nenhum dia arquivado ainda. O fechamento de hoje ficará salvo amanhã.</div>';
+    return;
+  }
+  const stars = ['','⭐','⭐⭐','⭐⭐⭐','⭐⭐⭐⭐','⭐⭐⭐⭐⭐'];
+  const energyEmoji = ['','😴','😐','😊','🔥'];
+  container.innerHTML = archive.slice(0,7).map(r=>`
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:12px;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace">${r.date}</div>
+        <div style="font-size:13px">${stars[r.stars]||''} ${energyEmoji[r.energy]||''}</div>
+      </div>
+      ${r.conquista ? `<div style="font-size:12px;color:var(--text2);margin-bottom:4px"><span style="color:var(--green);font-weight:600">✓ </span>${r.conquista}</div>` : ''}
+      ${r.amanha    ? `<div style="font-size:12px;color:var(--text2);margin-bottom:4px"><span style="color:var(--blue);font-weight:600">→ </span>${r.amanha}</div>` : ''}
+      ${r.lohaine   ? `<div style="font-size:12px;color:var(--text2);margin-bottom:4px"><span style="color:var(--purple);font-weight:600">❤️ </span>${r.lohaine}</div>` : ''}
+      ${r.espirito  ? `<div style="font-size:12px;color:var(--text2)"><span style="color:var(--teal);font-weight:600">🙏 </span>${r.espirito}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ─── PIPE ───
+function renderPipe() {
+  const tbody = document.getElementById('pipe-tbody');
+  tbody.innerHTML = PIPE_DATA.map((c,i)=>{
+    const status = loadLS('pipe-status-'+i,'frio');
+    const meeting = loadLS('pipe-meeting-'+i,'');
+    const note = loadLS('pipe-note-'+i,'');
+    return `
+    <tr>
+      <td class="client-name">${c.name}</td>
+      <td class="client-vol">${c.vol}</td>
+      <td>
+        <select class="status-select" onchange="savePipeStatus(${i},this.value)">
+          <option value="frio" ${status==='frio'?'selected':''}>🔵 Frio</option>
+          <option value="morno" ${status==='morno'?'selected':''}>🟠 Morno</option>
+          <option value="quente" ${status==='quente'?'selected':''}>🟢 Quente</option>
+          <option value="ativo" ${status==='ativo'?'selected':''}>⭐ Ativo</option>
+        </select>
+      </td>
+      <td><input type="date" value="${meeting}" onchange="saveLS('pipe-meeting-${i}',this.value)" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:3px 8px;font-size:11px;outline:none"></td>
+      <td><input placeholder="Nota..." value="${note}" onchange="saveLS('pipe-note-${i}',this.value)" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:3px 10px;font-size:12px;width:160px;outline:none"></td>
+    </tr>`;
+  }).join('');
+}
+function savePipeStatus(i, val) {
+  saveLS('pipe-status-'+i, val);
+  renderPipe();
+}
+
+// ─── MFO PRODUCTS ───
+function updateMFOProducts() {
+  const est  = +document.getElementById('prod-est').value || 0;
+  const auc  = +document.getElementById('prod-auc').value || 0;
+  const cred = +document.getElementById('prod-cred').value || 0;
+
+  setBar('prod-est-bar','prod-est-pct', est, 1000);
+  setBar('prod-auc-bar','prod-auc-pct', auc, 1500);
+  setBar('prod-cred-bar','prod-cred-pct', cred, 500);
+
+  const total = est + auc + cred;
+  const el = document.getElementById('mfo-rec-real');
+  if(el) el.textContent = total.toLocaleString('pt-BR');
+  setBar('mfo-rec-bar','mfo-rec-pct', total, 1500);
+
+  saveLS('mfo-products', {est,auc,cred});
+  updateSidebar();
+}
+
+function updateMFOInputs() {
+  const auc = +loadLS('mfo-auc-real',0);
+  const cli = +loadLS('mfo-cli-real',0);
+  const margem = +loadLS('mfo-margem',0);
+
+  const aucEl = document.getElementById('mfo-auc-real');
+  if(aucEl) aucEl.textContent = auc;
+  setBar('mfo-auc-bar','mfo-auc-pct', auc, 300);
+
+  const cliEl = document.getElementById('mfo-cli-real');
+  if(cliEl) cliEl.textContent = cli;
+  setBar('mfo-cli-bar','mfo-cli-pct', cli, 20);
+
+  const mEl = document.getElementById('mfo-margem');
+  if(mEl) mEl.textContent = margem;
+  setBar('mfo-margem-bar','mfo-margem-pct', margem, 25);
+}
+
+// ─── CVM ───
+function updateCVM() {
+  const auc    = +document.getElementById('cvm-auc-input').value || 0;
+  const rec    = +document.getElementById('cvm-rec-input').value || 0;
+  const cli    = +document.getElementById('cvm-cli-input').value || 0;
+  const margem = +document.getElementById('cvm-margem-input').value || 0;
+
+  document.getElementById('cvm-auc-real').textContent = auc;
+  document.getElementById('cvm-rec-real').textContent = rec;
+  document.getElementById('cvm-cli').textContent = cli;
+  document.getElementById('cvm-margem').textContent = margem;
+
+  setBar('cvm-auc-bar','cvm-auc-pct', auc, 60);
+  setBar('cvm-rec-bar','cvm-rec-pct', rec, 300);
+  setBar('cvm-margem-bar', null, margem, 25);
+  setBar('cvm-2027-bar','cvm-2027-pct', auc, 200);
+
+  saveLS('cvm', {auc,rec,cli,margem});
+}
+
+// ─── RENDA ───
+function updateRenda() {
+  const fields = [
+    {id:'r-mfo-real', meta:300, pct:'rp-mfo'},
+    {id:'r-cvm-real', meta:75,  pct:'rp-cvm'},
+    {id:'r-bonus-real', meta:200, pct:'rp-bonus'},
+    {id:'r-cons-real', meta:100, pct:'rp-cons'},
+    {id:'r-incorp-real', meta:100, pct:'rp-incorp'},
+    {id:'r-canada-real', meta:100, pct:'rp-canada'},
+  ];
+  let total = 0;
+  const vals = {};
+  fields.forEach(f=>{
+    const v = +document.getElementById(f.id).value || 0;
+    total += v;
+    vals[f.id] = v;
+    const pct = f.meta > 0 ? Math.min(Math.round(v/f.meta*100),999) : 0;
+    const el = document.getElementById(f.pct);
+    if(el) el.textContent = pct+'%';
+  });
+  document.getElementById('r-total-real').textContent = 'R$ '+total+'k';
+  const totPct = Math.min(Math.round(total/775*100),999);
+  document.getElementById('rp-total').textContent = totPct+'%';
+  saveLS('renda', vals);
+  updateSidebar();
+}
+
+// ─── SAÚDE ───
+function updateSaude() {
+  const atual = +document.getElementById('peso-atual').value || 0;
+  const meta  = +document.getElementById('peso-meta').value  || 0;
+  const gord  = +document.getElementById('gord-atual').value || 24;
+
+  const diff = atual > 0 && meta > 0 ? (atual - meta).toFixed(1) : '—';
+  document.getElementById('kg-faltam').textContent = diff > 0 ? diff+'kg' : '—';
+
+  // gordura: de 24% para 17%
+  const gordProgress = Math.max(0, Math.min(100, Math.round((24 - gord) / (24 - 17) * 100)));
+  const gBar = document.getElementById('gord-bar');
+  if(gBar) gBar.style.width = gordProgress+'%';
+  const gPct = document.getElementById('gord-pct');
+  if(gPct) gPct.textContent = gordProgress+'%';
+  document.getElementById('gord-progresso').innerHTML = gord+'<span class="unit">%</span>';
+
+  saveLS('saude', {atual, meta, gord});
+}
+
+function updateCFP() {
+  const pct = Math.min(100, +document.getElementById('cfp-pct').value || 0);
+  const bar = document.getElementById('cfp-bar');
+  if(bar) bar.style.width = pct+'%';
+  saveLS('cfp-pct', pct);
+}
+
+// ─── HABITS ───
+function renderHabits() {
+  const container = document.getElementById('habit-tracker');
+  const data = loadLS('habits-week', {});
+  const weekDays = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:160px repeat(7,1fr);gap:8px;align-items:center">
+      <div></div>
+      ${weekDays.map(d=>`<div style="text-align:center;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1px">${d}</div>`).join('')}
+      ${HABITS.map((h,hi)=>`
+        <div style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px"><span>${h.icon}</span>${h.name}</div>
+        ${weekDays.map((_,di)=>{
+          const key = hi+'_'+di;
+          const checked = data[key] || false;
+          return `<div style="display:flex;justify-content:center">
+            <div onclick="toggleHabit(${hi},${di})" style="width:24px;height:24px;border-radius:6px;border:2px solid ${checked?'var(--green)':'var(--border2)'};background:${checked?'rgba(62,207,142,.15)':'transparent'};cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s">${checked?'✓':''}</div>
+          </div>`;
+        }).join('')}
+      `).join('')}
+    </div>
+  `;
+}
+
+function toggleHabit(hi, di) {
+  const data = loadLS('habits-week', {});
+  const key = hi+'_'+di;
+  data[key] = !data[key];
+  saveLS('habits-week', data);
+  renderHabits();
+}
+function resetWeekHabits() {
+  if(confirm('Zerar os hábitos desta semana?')) {
+    saveLS('habits-week', {});
+    renderHabits();
+  }
+}
+
+// ─── SIDEBAR BARS ───
+function updateSidebar() {
+  // renda
+  const renda = loadLS('renda', {});
+  const total = Object.values(renda).reduce((a,b)=>a+(+b||0), 0);
+  const rendaPct = Math.min(Math.round(total/775*100), 100);
+  const sbRenda = document.getElementById('sb-pct-renda');
+  const sbBarRenda = document.getElementById('sb-bar-renda');
+  if(sbRenda) sbRenda.textContent = rendaPct+'%';
+  if(sbBarRenda) sbBarRenda.style.width = rendaPct+'%';
+
+  // mfo
+  const prod = loadLS('mfo-products', {est:0,auc:0,cred:0});
+  const totalMFO = (+prod.est||0) + (+prod.auc||0) + (+prod.cred||0);
+  const mfoPct = Math.min(Math.round(totalMFO/1500*100), 100);
+  const sbMFO = document.getElementById('sb-pct-mfo');
+  const sbBarMFO = document.getElementById('sb-bar-mfo');
+  if(sbMFO) sbMFO.textContent = mfoPct+'%';
+  if(sbBarMFO) sbBarMFO.style.width = mfoPct+'%';
+}
+
+// ─── HELPERS ───
+function setBar(barId, pctId, val, max) {
+  const pct = max > 0 ? Math.min(Math.round(val/max*100), 100) : 0;
+  const bar = document.getElementById(barId);
+  if(bar) bar.style.width = pct+'%';
+  if(pctId) {
+    const el = document.getElementById(pctId);
+    if(el) el.textContent = pct+'%';
+  }
+}
+
+// ─── LOAD ALL ───
+function loadAll() {
+  // Ritual
+  const ritual = loadLS('ritual', new Array(8).fill(false));
+  document.querySelectorAll('.ritual-item').forEach((el,i)=>{
+    el.classList.toggle('done', ritual[i]||false);
+  });
+
+  // Energy
+  const energy = loadLS('energy', 0);
+  if(energy) setEnergy(energy);
+
+  // Tasks
+  renderTasks();
+
+  // Reflection
+  ['r-conquista','r-amanha','r-lohaine','r-espirito'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.value = loadLS(id,'');
+  });
+
+  // Stars
+  const stars = loadLS('stars', 0);
+  if(stars) {
+    document.querySelectorAll('.star-btn').forEach((b,i)=>{
+      b.classList.toggle('lit', i<stars);
+    });
+  }
+
+  // MFO products
+  const prod = loadLS('mfo-products', {est:0,auc:0,cred:0});
+  const prodEst = document.getElementById('prod-est');
+  const prodAuc = document.getElementById('prod-auc');
+  const prodCred = document.getElementById('prod-cred');
+  if(prodEst) { prodEst.value = prod.est; }
+  if(prodAuc) { prodAuc.value = prod.auc; }
+  if(prodCred) { prodCred.value = prod.cred; }
+  updateMFOProducts();
+
+  // CVM
+  const cvm = loadLS('cvm', {auc:0,rec:0,cli:0,margem:0});
+  ['auc','rec','cli','margem'].forEach(k=>{
+    const el = document.getElementById('cvm-'+k+'-input');
+    if(el) el.value = cvm[k]||0;
+  });
+  updateCVM();
+
+  // Renda
+  const renda = loadLS('renda', {});
+  ['r-mfo-real','r-cvm-real','r-bonus-real','r-cons-real','r-incorp-real','r-canada-real'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.value = renda[id]||0;
+  });
+  updateRenda();
+
+  // Saude
+  const saude = loadLS('saude', {atual:0,meta:0,gord:24});
+  const pesoAt = document.getElementById('peso-atual');
+  const pesoMe = document.getElementById('peso-meta');
+  const gordAt = document.getElementById('gord-atual');
+  if(pesoAt) pesoAt.value = saude.atual;
+  if(pesoMe) pesoMe.value = saude.meta;
+  if(gordAt) gordAt.value = saude.gord;
+  updateSaude();
+
+  // CFP
+  const cfpPct = loadLS('cfp-pct',0);
+  const cfpEl = document.getElementById('cfp-pct');
+  if(cfpEl) cfpEl.value = cfpPct;
+  updateCFP();
+  const cfpData = loadLS('cfp-data','');
+  const cfpDataEl = document.getElementById('cfp-data');
+  if(cfpDataEl) cfpDataEl.value = cfpData;
+
+  // Duolingo
+  const duoStreak = loadLS('duo-streak',0);
+  const duoNivel  = loadLS('duo-nivel','A1 — Iniciante');
+  const dEl = document.getElementById('duo-streak');
+  const dNEl = document.getElementById('duo-nivel');
+  if(dEl) dEl.value = duoStreak;
+  if(dNEl) Array.from(dNEl.options).forEach(o=>{ if(o.value===duoNivel) o.selected=true; });
+
+  // Selects de status
+  const selects = ['carro-status','viagem-status','canada-status','incorp-status','ferias-status'];
+  selects.forEach(id=>{
+    const val = loadLS(id,'');
+    const el = document.getElementById(id);
+    if(el && val) Array.from(el.options).forEach(o=>{ if(o.value===val) o.selected=true; });
+  });
+
+  // Consorcio clientes
+  const consEl = document.getElementById('cons-cli');
+  if(consEl) consEl.value = loadLS('cons-cli',0);
+
+  // Tenis
+  const tenisJEl = document.getElementById('tenis-jogos');
+  const tenisNEl = document.getElementById('tenis-nivel');
+  if(tenisJEl) tenisJEl.value = loadLS('tenis-jogos',0);
+  if(tenisNEl) {
+    const v = loadLS('tenis-nivel','');
+    if(v) Array.from(tenisNEl.options).forEach(o=>{ if(o.value===v||o.text===v) o.selected=true; });
+  }
+
+  // Pipe
+  renderPipe();
+
+  // Habits
+  renderHabits();
+
+  // Macro
+  loadMacro();
+
+  // Consorcio
+  const consVal = loadLS('cons-valor',0);
+  const consCliEl = document.getElementById('cons-cli');
+  const consValEl = document.getElementById('cons-valor');
+  if(consCliEl) consCliEl.value = loadLS('cons-cli',0);
+  if(consValEl) consValEl.value = consVal;
+  updateConsorcio();
+
+  // Evolução — pre-render semana
+  renderEvSemana();
+
+  // Histórico de reflexões
+  renderReflectionHistory();
+
+  updateSidebar();
+}
+
+// ─── TREINO DAY TABS ───
+function showDay(day) {
+  const days = ['seg','ter','qua','qui','sex','sab','dom'];
+  days.forEach(d => {
+    const el = document.getElementById('day-'+d);
+    const btn = document.getElementById('tab-'+d);
+    if(el) el.style.display = d===day ? 'block' : 'none';
+    if(btn) {
+      btn.className = d===day ? 'btn btn-gold' : 'btn btn-outline';
+    }
+  });
+}
+
+// ─── MACRO ───
+function saveMacro() {
+  const fields = ['selic','ipca','pib','dolar','cdi','ibov','desemprego','divida','fed','sp500','ouro','petroleo'];
+  const textFields = ['analise-br','analise-global','impacto','eventos'];
+  const data = {};
+  fields.forEach(f => {
+    const el = document.getElementById('m-'+f);
+    if(el) data[f] = el.value;
+  });
+  textFields.forEach(f => {
+    const el = document.getElementById('m-'+f);
+    if(el) data[f] = el.value;
+  });
+  saveLS('macro', data);
+}
+
+function stampMacroDate() {
+  const now = new Date();
+  const str = now.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  saveLS('macro-last-update', str);
+  document.getElementById('macro-last-update').textContent = str;
+  showToast();
+}
+
+function loadMacro() {
+  const data = loadLS('macro', {});
+  const fields = ['selic','ipca','pib','dolar','cdi','ibov','desemprego','divida','fed','sp500','ouro','petroleo','analise-br','analise-global','impacto','eventos'];
+  fields.forEach(f => {
+    const el = document.getElementById('m-'+f);
+    if(el && data[f] !== undefined) el.value = data[f];
+  });
+  const lastUpdate = loadLS('macro-last-update','—');
+  const el = document.getElementById('macro-last-update');
+  if(el) el.textContent = lastUpdate;
+}
+
+// ─── CONSORCIO ───
+function updateConsorcio() {
+  const cli = +document.getElementById('cons-cli').value || 0;
+  const val = +document.getElementById('cons-valor').value || 0;
+  const pct = Math.min(Math.round(val/12*100), 100);
+  const bar = document.getElementById('cons-bar');
+  const pctEl = document.getElementById('cons-pct');
+  if(bar) bar.style.width = pct+'%';
+  if(pctEl) pctEl.textContent = pct+'%';
+  saveLS('cons-cli', cli);
+  saveLS('cons-valor', val);
+}
+
+// ─── EVOLUÇÃO ───
+// Orçamentos mensais (distribuição linear das metas anuais)
+const EV_METAS = {
+  mfo_auc:  [50,55,60,68,75,82,90,100,110,120,135,150],  // mm acumulado
+  mfo_rec:  [80,90,100,115,125,135,145,155,160,165,170,160],  // mil/mês
+  cvm_auc:  [5,8,12,18,24,30,36,42,48,52,56,60],   // mm acumulado
+  cvm_rec:  [10,15,20,25,28,30,32,33,34,35,36,32], // mil/mês
+  treinos:  [20,20,20,20,20,18,20,20,20,20,20,18], // por mês
+  oracoes:  [20,20,20,20,20,18,20,20,20,20,20,18], // 5x/sem ~20/mês
+  renda:    [45,50,55,60,65,70,70,70,75,75,75,65], // mil/mês
+  cons_val: [0.8,0.8,1,1,1,1,1,1,1,1,1,1],         // mm/mês
+};
+
+const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MONTH_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+function evShowTab(tab) {
+  ['semana','mensal','input'].forEach(t => {
+    const el = document.getElementById('ev-'+t);
+    const btn = document.getElementById('ev-tab-'+t);
+    if(el) el.style.display = t===tab ? 'block' : 'none';
+    if(btn) btn.className = t===tab ? 'btn btn-gold' : 'btn btn-outline';
+  });
+  if(tab==='semana') renderEvSemana();
+  if(tab==='mensal') renderEvMensal(new Date().getMonth());
+  if(tab==='input')  loadInputFields();
+}
+
+function getMonthData(m) {
+  return loadLS('ev-month-'+m, null);
+}
+
+function saveMonthData() {
+  const m = +document.getElementById('inp-mes-ref').value;
+  const data = {
+    mfo_auc:   +document.getElementById('inp-mfo-auc').value  || 0,
+    mfo_rec:   +document.getElementById('inp-mfo-rec').value  || 0,
+    mfo_cli:   +document.getElementById('inp-mfo-cli').value  || 0,
+    cvm_auc:   +document.getElementById('inp-cvm-auc').value  || 0,
+    cvm_rec:   +document.getElementById('inp-cvm-rec').value  || 0,
+    cvm_cli:   +document.getElementById('inp-cvm-cli').value  || 0,
+    treinos:   +document.getElementById('inp-treinos-real').value || 0,
+    oracoes:   +document.getElementById('inp-oracoes').value  || 0,
+    peso:      +document.getElementById('inp-peso').value     || 0,
+    renda:     +document.getElementById('inp-renda-mes').value|| 0,
+    cons_val:  +document.getElementById('inp-cons-valor').value|| 0,
+    cons_cli:  +document.getElementById('inp-cons-cli').value || 0,
+    savedAt: new Date().toLocaleDateString('pt-BR'),
+  };
+  saveLS('ev-month-'+m, data);
+  const el = document.getElementById('inp-last-saved');
+  if(el) el.textContent = '✅ Salvo — '+MONTH_NAMES[m]+' '+data.savedAt;
+  showToast();
+}
+
+function autoSaveInput() {
+  // live save draft
+  const draft = {
+    mfo_auc:  document.getElementById('inp-mfo-auc')?.value,
+    mfo_rec:  document.getElementById('inp-mfo-rec')?.value,
+    mfo_cli:  document.getElementById('inp-mfo-cli')?.value,
+    cvm_auc:  document.getElementById('inp-cvm-auc')?.value,
+    cvm_rec:  document.getElementById('inp-cvm-rec')?.value,
+    cvm_cli:  document.getElementById('inp-cvm-cli')?.value,
+    treinos:  document.getElementById('inp-treinos-real')?.value,
+    oracoes:  document.getElementById('inp-oracoes')?.value,
+    peso:     document.getElementById('inp-peso')?.value,
+    renda:    document.getElementById('inp-renda-mes')?.value,
+    cons_val: document.getElementById('inp-cons-valor')?.value,
+    cons_cli: document.getElementById('inp-cons-cli')?.value,
+  };
+  saveLS('ev-draft', draft);
+}
+
+function loadInputFields() {
+  const m = new Date().getMonth();
+  const el = document.getElementById('inp-mes-ref');
+  if(el) el.value = m;
+  // load saved month data or draft
+  const saved = getMonthData(m) || loadLS('ev-draft', {});
+  const map = {
+    'inp-mfo-auc':'mfo_auc','inp-mfo-rec':'mfo_rec','inp-mfo-cli':'mfo_cli',
+    'inp-cvm-auc':'cvm_auc','inp-cvm-rec':'cvm_rec','inp-cvm-cli':'cvm_cli',
+    'inp-treinos-real':'treinos','inp-oracoes':'oracoes','inp-peso':'peso',
+    'inp-renda-mes':'renda','inp-cons-valor':'cons_val','inp-cons-cli':'cons_cli',
+  };
+  Object.entries(map).forEach(([id,key])=>{
+    const el = document.getElementById(id);
+    if(el && saved[key]) el.value = saved[key];
+  });
+  if(saved.savedAt) {
+    const lsEl = document.getElementById('inp-last-saved');
+    if(lsEl) lsEl.textContent = 'Último save: '+saved.savedAt;
+  }
+}
+
+function renderEvSemana() {
+  const now = new Date();
+  const m = now.getMonth();
+
+  // label
+  const wk = Math.ceil(now.getDate()/7);
+  const slEl = document.getElementById('ev-semana-label');
+  if(slEl) slEl.textContent = 'Semana '+wk+' de '+MONTH_NAMES[m];
+  const mlEl = document.getElementById('ev-mes-label');
+  if(mlEl) mlEl.textContent = MONTH_NAMES[m]+' 2026';
+
+  // tasks
+  const tasks = loadLS('tasks',[]);
+  const done = tasks.filter(t=>t.done).length;
+  const total = tasks.length;
+  const taskPct = total > 0 ? Math.round(done/total*100) : 0;
+  document.getElementById('ev-tasks-done').textContent = done;
+  document.getElementById('ev-tasks-total').textContent = '/'+total;
+  document.getElementById('ev-tasks-pct').textContent = taskPct+'%';
+  document.getElementById('ev-tasks-bar').style.width = taskPct+'%';
+
+  // ritual
+  const ritual = loadLS('ritual', new Array(8).fill(false));
+  const ritDone = ritual.filter(Boolean).length;
+  const ritPct = Math.round(ritDone/8*100);
+  document.getElementById('ev-ritual-done').textContent = ritDone;
+  document.getElementById('ev-ritual-pct').textContent = ritPct+'%';
+  document.getElementById('ev-ritual-bar').style.width = ritPct+'%';
+
+  // habits
+  const habData = loadLS('habits-week',{});
+  const habTotal = 7*7; // 7 habits × 7 days
+  const habDone = Object.values(habData).filter(Boolean).length;
+  const habPct = Math.round(habDone/habTotal*100);
+  document.getElementById('ev-habits-done').textContent = habDone;
+  document.getElementById('ev-habits-total').textContent = '/'+habTotal;
+  document.getElementById('ev-habits-pct').textContent = habPct+'%';
+  document.getElementById('ev-habits-bar').style.width = habPct+'%';
+
+  // frentes do mês atual
+  const md = getMonthData(m) || {};
+  const frentes = buildFrentes(m, md);
+  const container = document.getElementById('ev-frentes-semana');
+  if(container) container.innerHTML = frentes.map(f=>renderFrenteBar(f)).join('');
+
+  // alerta
+  renderAlerta(frentes, done, total, ritDone, habDone, habTotal);
+}
+
+function buildFrentes(m, md) {
+  const meta = EV_METAS;
+  return [
+    { key:'mfo_auc',  label:'MFO — AuC',       real: md.mfo_auc||0,  orc: meta.mfo_auc[m],  unit:'mm',  color:'var(--gold)' },
+    { key:'mfo_rec',  label:'MFO — Receita',    real: md.mfo_rec||0,  orc: meta.mfo_rec[m],  unit:'k',   color:'var(--gold)' },
+    { key:'cvm_auc',  label:'CVM — AuC',        real: md.cvm_auc||0,  orc: meta.cvm_auc[m],  unit:'mm',  color:'var(--blue)' },
+    { key:'cvm_rec',  label:'CVM — Receita',    real: md.cvm_rec||0,  orc: meta.cvm_rec[m],  unit:'k',   color:'var(--blue)' },
+    { key:'treinos',  label:'Treinos',           real: md.treinos||0,  orc: meta.treinos[m],  unit:'x',   color:'var(--purple)' },
+    { key:'oracoes',  label:'Orações',           real: md.oracoes||0,  orc: meta.oracoes[m],  unit:'x',   color:'var(--teal)' },
+    { key:'renda',    label:'Renda Pessoal',     real: md.renda||0,    orc: meta.renda[m],    unit:'k',   color:'var(--green)' },
+    { key:'cons_val', label:'Consórcio Crédito', real: md.cons_val||0, orc: meta.cons_val[m], unit:'mm',  color:'var(--orange)' },
+  ];
+}
+
+function renderFrenteBar(f) {
+  const pct = f.orc > 0 ? Math.min(Math.round(f.real/f.orc*100), 150) : 0;
+  const barPct = Math.min(pct, 100);
+  const color = pct >= 90 ? 'var(--green)' : pct >= 60 ? 'var(--gold)' : 'var(--red)';
+  const emoji = pct >= 90 ? '✅' : pct >= 60 ? '⚠️' : '🔴';
+  const mmChange = f.orc > 0 ? (f.real - f.orc).toFixed(1) : '—';
+  const mmSign = +mmChange > 0 ? '+' : '';
+  return `
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:16px">
+    <div style="width:160px;font-size:13px;font-weight:600;color:${f.color};flex-shrink:0">${emoji} ${f.label}</div>
+    <div style="flex:1">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:5px">
+        <span>Real: <strong style="color:var(--text)">${f.real} ${f.unit}</strong></span>
+        <span>Orç: ${f.orc} ${f.unit}</span>
+        <span style="color:${color};font-family:'DM Mono',monospace;font-weight:700">${pct}%</span>
+      </div>
+      <div class="progress-track"><div style="height:100%;border-radius:4px;background:${color};width:${barPct}%;transition:width .6s"></div></div>
+    </div>
+    <div style="font-size:12px;font-family:'DM Mono',monospace;color:${+mmChange>0?'var(--green)':+mmChange<0?'var(--red)':'var(--text3)'};white-space:nowrap;min-width:60px;text-align:right">${mmSign}${mmChange} ${f.unit}</div>
+  </div>`;
+}
+
+function renderAlerta(frentes, tasksDone, tasksTotal, ritDone, habDone, habTotal) {
+  const above = frentes.filter(f=>f.orc>0 && (f.real/f.orc)>=0.9).map(f=>f.label);
+  const below = frentes.filter(f=>f.orc>0 && (f.real/f.orc)<0.6).map(f=>f.label);
+  const medium = frentes.filter(f=>f.orc>0 && (f.real/f.orc)>=0.6 && (f.real/f.orc)<0.9).map(f=>f.label);
+
+  const taskPct = tasksTotal > 0 ? Math.round(tasksDone/tasksTotal*100) : 0;
+  const habPct  = Math.round(habDone/habTotal*100);
+  const ritPct  = Math.round(ritDone/8*100);
+
+  let txt = '';
+
+  // FORÇA
+  if(above.length > 0) {
+    txt += `<div style="margin-bottom:10px"><span style="color:var(--green);font-weight:700">✅ MAIOR ESFORÇO:</span> ${above.join(', ')} — atingimento ≥90%. Você está entregando bem nessas frentes.</div>`;
+  }
+
+  // ATENÇÃO
+  if(below.length > 0) {
+    txt += `<div style="margin-bottom:10px"><span style="color:var(--red);font-weight:700">🔴 DELEGADO / ATRASADO:</span> ${below.join(', ')} — abaixo de 60% do orçado. Essas frentes precisam de atenção ou foram conscientemente deixadas para depois.</div>`;
+  }
+
+  // MÉDIO
+  if(medium.length > 0) {
+    txt += `<div style="margin-bottom:10px"><span style="color:var(--orange);font-weight:700">⚠️ EM ANDAMENTO:</span> ${medium.join(', ')} — entre 60% e 90%. Progresso existe, mas há espaço para acelerar.</div>`;
+  }
+
+  // ROTINA
+  if(ritPct < 50) {
+    txt += `<div style="margin-bottom:10px"><span style="color:var(--orange);font-weight:700">⚠️ RITUAL:</span> Apenas ${ritDone}/8 itens do ritual esta manhã (${ritPct}%). A manhã estruturada é o combustível do dia — vale proteger esse tempo.</div>`;
+  } else if(ritPct >= 75) {
+    txt += `<div style="margin-bottom:10px"><span style="color:var(--green);font-weight:700">✅ RITUAL:</span> ${ritDone}/8 itens completos hoje (${ritPct}%). Boa disciplina na abertura do dia.</div>`;
+  }
+
+  if(habPct < 50) {
+    txt += `<div style="margin-bottom:10px"><span style="color:var(--red);font-weight:700">🔴 HÁBITOS:</span> ${habDone} de ${habTotal} checks esta semana (${habPct}%). Os hábitos são a base da energia — sem eles, tudo o mais fica comprometido.</div>`;
+  }
+
+  if(taskPct >= 80) {
+    txt += `<div style="margin-bottom:10px"><span style="color:var(--green);font-weight:700">✅ EXECUÇÃO:</span> ${tasksDone}/${tasksTotal} tarefas concluídas (${taskPct}%). Alta taxa de entrega operacional.</div>`;
+  } else if(tasksTotal > 0 && taskPct < 50) {
+    txt += `<div style="margin-bottom:10px"><span style="color:var(--orange);font-weight:700">⚠️ EXECUÇÃO:</span> ${tasksDone}/${tasksTotal} tarefas (${taskPct}%). Muitas tarefas abertas — verifique se estão priorizadas corretamente.</div>`;
+  }
+
+  if(!txt) txt = '<span style="color:var(--text3)">Insira os dados do mês em "Inserir Dados" para ver a análise automática.</span>';
+
+  const el = document.getElementById('ev-alerta');
+  if(el) el.innerHTML = txt;
+}
+
+function renderEvMensal(selectedMonth) {
+  const tabsEl = document.getElementById('ev-month-tabs');
+  if(tabsEl) {
+    tabsEl.innerHTML = MONTH_SHORT.map((mn,i)=>`
+      <button onclick="renderEvMensal(${i})" style="padding:6px 14px;border-radius:8px;border:1px solid ${i===selectedMonth?'var(--gold)':'var(--border2)'};background:${i===selectedMonth?'rgba(200,169,110,.15)':'transparent'};color:${i===selectedMonth?'var(--gold)':'var(--text2)'};cursor:pointer;font-size:12px;font-weight:600;font-family:'Outfit',sans-serif;transition:all .15s">${mn}</button>
+    `).join('');
+  }
+
+  const md = getMonthData(selectedMonth) || {};
+  const prev = selectedMonth > 0 ? (getMonthData(selectedMonth-1)||{}) : {};
+  const frentes = buildFrentes(selectedMonth, md);
+  const prevFrentes = buildFrentes(selectedMonth-1, prev);
+
+  // M/M change
+  const content = document.getElementById('ev-mensal-content');
+  if(!content) return;
+
+  const rows = frentes.map((f,i)=>{
+    const pf = prevFrentes[i];
+    const pct = f.orc > 0 ? Math.min(Math.round(f.real/f.orc*100),150) : 0;
+    const barPct = Math.min(pct,100);
+    const color = pct >= 90 ? 'var(--green)' : pct >= 60 ? 'var(--gold)' : pct > 0 ? 'var(--red)' : 'var(--text3)';
+    const mm = pf.real > 0 ? ((f.real - pf.real)/pf.real*100).toFixed(1) : '—';
+    const mmColor = +mm > 0 ? 'var(--green)' : +mm < 0 ? 'var(--red)' : 'var(--text3)';
+    const mmSign = +mm > 0 ? '+' : '';
+    const yearData = Array.from({length:12},(_,mi)=>{
+      const d = getMonthData(mi)||{};
+      return d[f.key]||0;
+    });
+    const maxY = Math.max(...yearData, f.orc, 1);
+    const sparkline = yearData.map((v,mi)=>{
+      const h = Math.round(v/maxY*32);
+      const c = mi===selectedMonth ? 'var(--gold)' : v>=EV_METAS[f.key][mi] ? 'var(--green)' : v>0 ? 'var(--blue)' : 'var(--surface3)';
+      return `<div style="width:12px;height:${Math.max(h,2)}px;background:${c};border-radius:2px 2px 0 0;flex-shrink:0" title="${MONTH_SHORT[mi]}: ${v}"></div>`;
+    }).join('');
+
+    return `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="width:170px;flex-shrink:0">
+          <div style="font-size:13px;font-weight:700;color:${f.color}">${f.label}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">${MONTH_NAMES[selectedMonth]}</div>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:5px">
+            <span>Real: <strong style="color:var(--text)">${f.real} ${f.unit}</strong></span>
+            <span>Orç: ${f.orc} ${f.unit}</span>
+            <span style="color:${color};font-weight:700;font-family:'DM Mono',monospace">${pct > 0 ? pct+'%' : '—'}</span>
+          </div>
+          <div class="progress-track"><div style="height:100%;border-radius:4px;background:${color};width:${barPct}%;transition:width .6s"></div></div>
+        </div>
+        <div style="font-size:12px;font-family:'DM Mono',monospace;color:${mmColor};white-space:nowrap;min-width:70px;text-align:right">
+          M/M ${pf.real > 0 ? mmSign+mm+'%' : '—'}
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:2px;height:36px;flex-shrink:0">${sparkline}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // acumulado anual
+  const totalRendaReal = Array.from({length:selectedMonth+1},(_,mi)=>(getMonthData(mi)||{}).renda||0).reduce((a,b)=>a+b,0);
+  const totalRendaMeta = EV_METAS.renda.slice(0,selectedMonth+1).reduce((a,b)=>a+b,0);
+  const rendaAnualPct  = totalRendaMeta > 0 ? Math.round(totalRendaReal/totalRendaMeta*100) : 0;
+
+  content.innerHTML = rows + `
+  <div style="margin-top:20px;background:linear-gradient(135deg,rgba(200,169,110,.08),rgba(200,169,110,.03));border:1px solid rgba(200,169,110,.2);border-radius:var(--radius);padding:20px 24px">
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px">ACUMULADO ANO ATÉ ${MONTH_NAMES[selectedMonth].toUpperCase()}</div>
+    <div style="font-size:14px;color:var(--text2);line-height:2">
+      Renda acumulada: <strong style="color:var(--gold)">R$ ${totalRendaReal}k</strong> de <strong style="color:var(--text2)">R$ ${totalRendaMeta}k</strong> orçados
+      <span style="margin-left:12px;font-family:'DM Mono',monospace;font-size:13px;color:${rendaAnualPct>=80?'var(--green)':rendaAnualPct>=50?'var(--orange)':'var(--red)'};">(${rendaAnualPct}%)</span>
+    </div>
+  </div>`;
+}
+
+// ─── TRELLO ───
+const TRELLO_BOARD_NAME = 'Virtue MFO - Trello';
+
+function getTrelloKey()   { return loadLS('trello-api-key',''); }
+function getTrelloToken() { return loadLS('trello-api-token',''); }
+
+let trelloAllCards = [];
+let trelloMembers  = {};
+let trelloActiveFilter = 'todos';
+let trelloMemberFilter = '';
+
+function saveTrelloCreds() {
+  const key   = document.getElementById('cfg-trello-key')?.value.trim();
+  const token = document.getElementById('cfg-trello-token')?.value.trim();
+  if(!key || !token) { alert('Preencha os dois campos.'); return; }
+  saveLS('trello-api-key', key);
+  saveLS('trello-api-token', token);
+  loadTrello();
+}
+
+async function loadTrello() {
+  const TRELLO_KEY   = getTrelloKey();
+  const TRELLO_TOKEN = getTrelloToken();
+
+  const loadEl  = document.getElementById('trello-loading');
+  const errorEl = document.getElementById('trello-error');
+  const boardEl = document.getElementById('trello-board');
+  const statsEl = document.getElementById('trello-stats');
+  const btn     = document.getElementById('trello-refresh-btn');
+
+  // Se não tem credenciais, mostrar formulário de configuração
+  if(!TRELLO_KEY || !TRELLO_TOKEN) {
+    loadEl.style.display = 'block';
+    loadEl.innerHTML = `
+      <div style="max-width:420px;margin:0 auto;text-align:left">
+        <div style="font-size:28px;margin-bottom:12px;text-align:center">🔑</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;text-align:center">Configure o Trello</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:20px;text-align:center">As credenciais ficam salvas só no seu navegador</div>
+        <div style="margin-bottom:12px">
+          <label style="font-size:11px;color:var(--text3);font-weight:700;letter-spacing:1px;display:block;margin-bottom:6px">API KEY</label>
+          <input id="cfg-trello-key" type="text" placeholder="Cole sua API Key aqui" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;font-size:13px;font-family:'Outfit',sans-serif;outline:none">
+        </div>
+        <div style="margin-bottom:20px">
+          <label style="font-size:11px;color:var(--text3);font-weight:700;letter-spacing:1px;display:block;margin-bottom:6px">TOKEN</label>
+          <input id="cfg-trello-token" type="password" placeholder="Cole seu Token aqui" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;font-size:13px;font-family:'Outfit',sans-serif;outline:none">
+        </div>
+        <button onclick="saveTrelloCreds()" class="btn btn-gold" style="width:100%">Salvar e Conectar</button>
+        <div style="font-size:11px;color:var(--text3);margin-top:12px;text-align:center">As credenciais ficam armazenadas apenas no localStorage do seu navegador — nunca são enviadas a nenhum servidor externo além do Trello.</div>
+      </div>`;
+    return;
+  }
+
+  loadEl.style.display  = 'block';
+  loadEl.innerHTML = '<div style="font-size:32px;margin-bottom:12px">⏳</div>Buscando boards...';
+  errorEl.style.display = 'none';
+  boardEl.style.display = 'none';
+  statsEl.style.display = 'none';
+  if(btn) btn.textContent = '⏳ Carregando...';
+
+  try {
+    // 1. buscar todos os boards
+    const boardsRes = await fetch(
+      `https://api.trello.com/1/members/me/boards?key=${TRELLO_KEY}&token=${TRELLO_TOKEN}&fields=name,id`
+    );
+    if(!boardsRes.ok) throw new Error('Erro ao autenticar. Verifique a API Key e Token.');
+    const boards = await boardsRes.json();
+
+    // 2. encontrar o board pelo nome
+    const board = boards.find(b => b.name.toLowerCase().includes('virtue mfo') || b.name === TRELLO_BOARD_NAME);
+    if(!board) {
+      const names = boards.map(b=>b.name).join(', ');
+      throw new Error(`Board "${TRELLO_BOARD_NAME}" não encontrado. Boards disponíveis: ${names}`);
+    }
+
+    document.getElementById('trello-board-name').textContent = board.name + ' · Atualizado agora';
+
+    // 3. buscar listas, cards e membros em paralelo
+    const [listsRes, cardsRes, membersRes] = await Promise.all([
+      fetch(`https://api.trello.com/1/boards/${board.id}/lists?key=${TRELLO_KEY}&token=${TRELLO_TOKEN}&fields=name,id,closed`),
+      fetch(`https://api.trello.com/1/boards/${board.id}/cards?key=${TRELLO_KEY}&token=${TRELLO_TOKEN}&fields=name,desc,due,dueComplete,idList,idMembers,labels,shortUrl,closed&filter=open`),
+      fetch(`https://api.trello.com/1/boards/${board.id}/members?key=${TRELLO_KEY}&token=${TRELLO_TOKEN}&fields=fullName,username,avatarHash`),
+    ]);
+
+    const lists   = await listsRes.json();
+    const cards   = await cardsRes.json();
+    const members = await membersRes.json();
+
+    // mapear membros
+    trelloMembers = {};
+    members.forEach(m => { trelloMembers[m.id] = m.fullName || m.username; });
+
+    // popular filtro de membros
+    const memberSel = document.getElementById('trello-member-filter');
+    memberSel.innerHTML = '<option value="">Todos</option>';
+    members.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.fullName || m.username;
+      memberSel.appendChild(opt);
+    });
+
+    trelloAllCards = cards;
+
+    // 4. stats
+    renderTrelloStats(cards);
+
+    // 5. renderizar board
+    renderTrelloBoard(lists.filter(l=>!l.closed), cards);
+    // cache lists for filter re-renders
+    saveLS('trello-lists', lists.filter(l=>!l.closed));
+
+    loadEl.style.display  = 'none';
+    boardEl.style.display = 'block';
+    statsEl.style.display = 'grid';
+
+  } catch(err) {
+    loadEl.style.display  = 'none';
+    errorEl.style.display = 'block';
+    errorEl.innerHTML = `<strong>Erro:</strong> ${err.message}<br><br><span style="color:var(--text3);font-size:12px">Verifique se a API Key e Token estão corretos e se o board existe.</span>`;
+  }
+
+  if(btn) btn.textContent = '↻ Atualizar';
+}
+
+function renderTrelloStats(cards) {
+  const now = new Date(); now.setHours(0,0,0,0);
+  const today = now.getTime();
+
+  const total    = cards.length;
+  const atrasado = cards.filter(c => c.due && !c.dueComplete && new Date(c.due).setHours(0,0,0,0) < today).length;
+  const venceHoje= cards.filter(c => c.due && !c.dueComplete && new Date(c.due).setHours(0,0,0,0) === today).length;
+  const concluido= cards.filter(c => c.dueComplete).length;
+
+  document.getElementById('trello-stats').innerHTML = `
+    <div class="metric" style="--accent-color:var(--blue)">
+      <div class="lbl">TOTAL DE CARDS</div>
+      <div class="val">${total}</div>
+      <div class="sub">em aberto no board</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--red)">
+      <div class="lbl">ATRASADOS</div>
+      <div class="val" style="color:var(--red)">${atrasado}</div>
+      <div class="sub">prazo vencido</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--orange)">
+      <div class="lbl">VENCEM HOJE</div>
+      <div class="val" style="color:var(--orange)">${venceHoje}</div>
+      <div class="sub">atenção agora</div>
+    </div>
+    <div class="metric" style="--accent-color:var(--green)">
+      <div class="lbl">CONCLUÍDOS</div>
+      <div class="val" style="color:var(--green)">${concluido}</div>
+      <div class="sub">com due date marcado</div>
+    </div>
+  `;
+}
+
+function renderTrelloBoard(lists, cards) {
+  const container = document.getElementById('trello-lists');
+  const now = new Date(); now.setHours(0,0,0,0);
+  const today = now.getTime();
+
+  // aplicar filtros
+  let filtered = cards;
+  if(trelloActiveFilter === 'atrasado') {
+    filtered = cards.filter(c => c.due && !c.dueComplete && new Date(c.due).setHours(0,0,0,0) < today);
+  } else if(trelloActiveFilter === 'hoje') {
+    filtered = cards.filter(c => c.due && !c.dueComplete && new Date(c.due).setHours(0,0,0,0) === today);
+  }
+  if(trelloMemberFilter) {
+    filtered = filtered.filter(c => c.idMembers.includes(trelloMemberFilter));
+  }
+
+  // agrupar por lista
+  const byList = {};
+  lists.forEach(l => { byList[l.id] = []; });
+  filtered.forEach(c => { if(byList[c.idList]) byList[c.idList].push(c); });
+
+  container.innerHTML = lists.map(list => {
+    const listCards = byList[list.id] || [];
+    const cardsHTML = listCards.length === 0
+      ? `<div style="font-size:12px;color:var(--text3);text-align:center;padding:20px">Nenhum card</div>`
+      : listCards.map(c => renderTrelloCard(c, today)).join('');
+
+    return `
+    <div style="min-width:260px;max-width:280px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;flex-shrink:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text)">${list.name}</div>
+        <div style="font-size:11px;background:var(--surface3);color:var(--text3);border-radius:10px;padding:2px 8px;font-weight:600">${listCards.length}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">${cardsHTML}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderTrelloCard(card, today) {
+  const now = new Date(); now.setHours(0,0,0,0);
+  let dueHTML = '';
+  let borderColor = 'var(--border)';
+
+  if(card.due) {
+    const dueDate = new Date(card.due);
+    const dueMidnight = new Date(card.due); dueMidnight.setHours(0,0,0,0);
+    const diff = dueMidnight.getTime() - today;
+    const formatted = dueDate.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+
+    if(card.dueComplete) {
+      dueHTML = `<span style="font-size:10px;background:rgba(62,207,142,.12);color:var(--green);padding:1px 7px;border-radius:4px;font-weight:600">✓ ${formatted}</span>`;
+      borderColor = 'rgba(62,207,142,.3)';
+    } else if(diff < 0) {
+      dueHTML = `<span style="font-size:10px;background:rgba(245,101,101,.15);color:var(--red);padding:1px 7px;border-radius:4px;font-weight:600">⚠ ${formatted}</span>`;
+      borderColor = 'rgba(245,101,101,.4)';
+    } else if(diff === 0) {
+      dueHTML = `<span style="font-size:10px;background:rgba(251,146,60,.15);color:var(--orange);padding:1px 7px;border-radius:4px;font-weight:600">🕐 Hoje</span>`;
+      borderColor = 'rgba(251,146,60,.4)';
+    } else if(diff <= 2*86400000) {
+      dueHTML = `<span style="font-size:10px;background:rgba(251,146,60,.1);color:var(--orange);padding:1px 7px;border-radius:4px;font-weight:600">${formatted}</span>`;
+    } else {
+      dueHTML = `<span style="font-size:10px;color:var(--text3);padding:1px 0">${formatted}</span>`;
+    }
+  }
+
+  const labelsHTML = (card.labels||[]).map(l => {
+    const lc = {'green':'var(--green)','yellow':'var(--gold)','orange':'var(--orange)','red':'var(--red)','purple':'var(--purple)','blue':'var(--blue)','sky':'var(--teal)','pink':'#f472b6','black':'var(--text3)','lime':'#a3e635'};
+    const col = lc[l.color] || 'var(--text3)';
+    return `<span style="display:inline-block;width:28px;height:6px;border-radius:3px;background:${col};margin-right:3px" title="${l.name}"></span>`;
+  }).join('');
+
+  const membersHTML = (card.idMembers||[]).map(mid => {
+    const name = trelloMembers[mid] || '?';
+    const initials = name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+    return `<div title="${name}" style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#0a0c14;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${initials}</div>`;
+  }).join('');
+
+  return `
+  <div onclick="window.open('${card.shortUrl}','_blank')" style="background:var(--surface);border:1px solid ${borderColor};border-radius:8px;padding:10px 12px;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='${borderColor}'">
+    ${labelsHTML ? `<div style="margin-bottom:6px">${labelsHTML}</div>` : ''}
+    <div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:6px">${card.name}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+      <div>${dueHTML}</div>
+      <div style="display:flex;gap:3px">${membersHTML}</div>
+    </div>
+  </div>`;
+}
+
+function trelloFilter(type) {
+  trelloActiveFilter = type;
+  ['todos','atrasado','hoje'].forEach(t => {
+    const btn = document.getElementById('tf-'+t);
+    if(btn) btn.className = t===type ? 'btn btn-gold' : 'btn btn-outline';
+  });
+  if(trelloAllCards.length > 0) {
+    const cachedLists = loadLS('trello-lists',[]);
+    if(cachedLists.length) renderTrelloBoard(cachedLists, trelloAllCards);
+    else loadTrello();
+  }
+}
+
+function trelloFilterMember(memberId) {
+  trelloMemberFilter = memberId;
+  trelloFilter(trelloActiveFilter);
+}
+
+init();
+</script>
+</body>
+</html>
