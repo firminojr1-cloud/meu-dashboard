@@ -785,7 +785,7 @@ select.status-select {
   </div>
   <div class="nav-group">
     <div class="nav-label">Time</div>
-    <div class="nav-item" onclick="goTo('trello');loadTrello()">
+    <div class="nav-item" onclick="goTo('trello')">
       <span class="icon">📋</span> Trello do Time
     </div>
   </div>
@@ -829,7 +829,7 @@ select.status-select {
     <button class="mobile-nav-btn" id="mn-evolucao" onclick="goTo('evolucao');setMobileNav('evolucao')">
       <span class="mn-icon">🔁</span>Evolução
     </button>
-    <button class="mobile-nav-btn" id="mn-trello" onclick="goTo('trello');loadTrello();setMobileNav('trello')">
+    <button class="mobile-nav-btn" id="mn-trello" onclick="goTo('trello');setMobileNav('trello')">
       <span class="mn-icon">📋</span>Trello
     </button>
   </div>
@@ -2133,11 +2133,15 @@ function checkDayReset() {
 function goTo(id) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
-  if(event && event.currentTarget && event.currentTarget.classList.contains('nav-item')) {
-    event.currentTarget.classList.add('active');
-  }
+  const panel = document.getElementById('panel-'+id);
+  if(panel) panel.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+id+"'")) {
+      n.classList.add('active');
+    }
+  });
   window.scrollTo(0,0);
+  if(id === 'trello') setTimeout(()=> loadTrello(), 100);
 }
 
 function setMobileNav(id) {
