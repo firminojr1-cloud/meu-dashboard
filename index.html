@@ -3044,7 +3044,7 @@ function renderEvMensal(selectedMonth) {
 }
 
 // ─── TRELLO ───
-const TRELLO_BOARD_NAME = 'Virtue MFO - Trello';
+const TRELLO_BOARD_NAME = 'MFO - Virtue';
 
 function getTrelloKey()   { return loadLS('trello-api-key',''); }
 function getTrelloToken() { return loadLS('trello-api-token',''); }
@@ -3112,7 +3112,7 @@ async function loadTrello() {
     const boards = await boardsRes.json();
 
     // 2. encontrar o board pelo nome
-    const board = boards.find(b => b.name.toLowerCase().includes('virtue mfo') || b.name === TRELLO_BOARD_NAME);
+    const board = boards.find(b => b.name === TRELLO_BOARD_NAME) || boards.find(b => b.name.toLowerCase().includes('mfo') && b.name.toLowerCase().includes('virtue'));
     if(!board) {
       const names = boards.map(b=>b.name).join(', ');
       throw new Error(`Board "${TRELLO_BOARD_NAME}" não encontrado. Boards disponíveis: ${names}`);
